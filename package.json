@@ -1,0 +1,14 @@
+{
+  "name": "minos",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Cover Your Basics",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justinlocsei/minos.git"
+  },
+  "author": "Justin Locsei",
+  "license": "ISC",
+  "homepage": "https://github.com/justinlocsei/minos#readme"
+}
