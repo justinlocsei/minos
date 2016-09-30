@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "End-to-end tests for Cover Your Basics",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "mocha tests; exit 0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/justinlocsei/minos.git"
