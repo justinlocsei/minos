@@ -1,6 +1,9 @@
 
 {
   "extends": "justinlocsei/configurations/mocha",
+  "globals": {
+    "browser": true
+  },
   "parserOptions": {
     "ecmaVersion": 6
   },

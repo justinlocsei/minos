@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
-    "test": "mocha tests --no-timeouts --slow 5000 || exit 0",
+    "test": "wdio wdio.conf.js || exit 0",
     "test-server": "cd vendor && java -jar selenium.jar -trustAllSSLCertificates"
   },
   "repository": {
@@ -28,6 +28,9 @@
     "mocha": "^3.1.0",
     "phantomjs-prebuilt": "^2.1.12",
     "request": "^2.75.0",
-    "selenium-webdriver": "^3.0.0-beta-3"
+    "wdio-mocha-framework": "^0.4.3",
+    "wdio-phantomjs-service": "^0.1.0",
+    "wdio-spec-reporter": "0.0.3",
+    "webdriverio": "^4.2.16"
   }
 }
