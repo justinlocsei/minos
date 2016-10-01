@@ -1,0 +1,10 @@
+
+{
+  "extends": "justinlocsei/configurations/mocha",
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "rules": {
+    "strict": [2, "global"]
+  }
+}
