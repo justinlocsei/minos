@@ -6,6 +6,8 @@
   "scripts": {
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
+    "test": "mocha tests --no-timeouts --slow 5000 || exit 0",
+    "test-server": "cd vendor && java -jar selenium.jar"
   },
   "repository": {
     "type": "git",
@@ -15,12 +17,15 @@
   "license": "ISC",
   "homepage": "https://github.com/justinlocsei/minos#readme",
   "dependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "eslint": "^3.7.0",
     "eslint-config-justinlocsei": "justinlocsei/eslint-config-justinlocsei#v1.6.0",
     "eslint-plugin-mocha": "^4.5.1",
     "linklocal": "^2.6.1",
     "minos": "file:helpers",
     "mocha": "^3.1.0",
-    "phantomjs-prebuilt": "^2.1.12"
+    "phantomjs-prebuilt": "^2.1.12",
+    "selenium-webdriver": "^3.0.0-beta-3"
   }
 }
