@@ -7,7 +7,7 @@
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
     "test": "mocha tests --no-timeouts --slow 5000 || exit 0",
-    "test-server": "cd vendor && java -jar selenium.jar"
+    "test-server": "cd vendor && java -jar selenium.jar -trustAllSSLCertificates"
   },
   "repository": {
     "type": "git",
