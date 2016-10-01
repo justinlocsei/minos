@@ -1,9 +1,18 @@
 #!/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+SCREENSHOTS_DIR="$ROOT_DIR/screenshots"
 VENDOR_DIR="$ROOT_DIR/vendor"
 
 SELENIUM_VERSION="2.53"
+
+# Create all required directories
+create_directories() {
+  for dir in "$SCREENSHOTS_DIR" "$VENDOR_DIR"; do
+    mkdir -p "$dir"
+  done
+}
 
 # Install the standalone Selenium server
 install_selenium() {
@@ -16,4 +25,5 @@ install_selenium() {
   ln -s "$selenium_jar" "$VENDOR_DIR/selenium.jar"
 }
 
+create_directories
 install_selenium
