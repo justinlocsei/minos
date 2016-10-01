@@ -22,7 +22,7 @@ install_selenium() {
     curl http://selenium-release.storage.googleapis.com/$SELENIUM_VERSION/selenium-server-standalone-$SELENIUM_VERSION.0.jar --output "$selenium_jar"
   fi
 
-  ln -s "$selenium_jar" "$VENDOR_DIR/selenium.jar"
+  ln -fs "$selenium_jar" "$VENDOR_DIR/selenium.jar"
 }
 
 create_directories
