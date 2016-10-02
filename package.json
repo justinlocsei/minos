@@ -31,6 +31,7 @@
     "wdio-mocha-framework": "^0.4.3",
     "wdio-phantomjs-service": "^0.1.0",
     "wdio-spec-reporter": "0.0.3",
-    "webdriverio": "^4.2.16"
+    "webdriverio": "^4.2.16",
+    "xml2js": "^0.4.17"
   }
 }
