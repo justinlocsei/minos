@@ -4,8 +4,8 @@ var exports = {};
 
 // A mapping of page names to relative URLs
 var PAGE_PATHS = {
-  about: '/about',
-  index: '/'
+  about: 'about',
+  index: ''
 };
 
 /**
@@ -20,7 +20,7 @@ function resolvePageUrls() {
   }
 
   return Object.keys(PAGE_PATHS).reduce(function(urls, pageName) {
-    urls[pageName] = baseUrl.replace(/\/$/, '') + PAGE_PATHS[pageName];
+    urls[pageName] = baseUrl.replace(/\/$/, '') + '/' + PAGE_PATHS[pageName];
     return urls;
   }, {});
 }
