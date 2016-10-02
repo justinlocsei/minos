@@ -2,10 +2,15 @@
 
 var exports = {};
 
+// The base URL, derived from the environment
+var baseUrl = process.env.MINOS_BASE_URL;
+
 // A mapping of page names to relative URLs
 var PAGE_PATHS = {
   about: 'about',
-  index: ''
+  index: '',
+  robots: 'robots.txt',
+  sitemap: 'sitemap.xml'
 };
 
 /**
@@ -14,7 +19,6 @@ var PAGE_PATHS = {
  * @returns {object}
  */
 function resolvePageUrls() {
-  var baseUrl = process.env.MINOS_BASE_URL;
   if (!baseUrl) {
     throw new Error('You must specify a base page URL via the MINOS_BASE_URL environment variable');
   }
@@ -29,5 +33,8 @@ function resolvePageUrls() {
 Object.defineProperty(exports, 'urls', {
   get: resolvePageUrls
 });
+
+// Expose the base URL
+exports.baseUrl = baseUrl;
 
 module.exports = exports;
