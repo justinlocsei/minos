@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
-    "test": "wdio wdio.conf.js || exit 0",
+    "test": "./scripts/test.sh",
     "test-server": "cd vendor && java -jar selenium.jar -trustAllSSLCertificates"
   },
   "repository": {
