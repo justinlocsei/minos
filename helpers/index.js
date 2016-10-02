@@ -8,7 +8,7 @@ var baseUrl = process.env.MINOS_BASE_URL;
 // A mapping of page names to relative URLs
 var PAGE_PATHS = {
   about: 'about',
-  index: '',
+  home: '',
   robots: 'robots.txt',
   sitemap: 'sitemap.xml'
 };
