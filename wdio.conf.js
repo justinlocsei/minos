@@ -1,5 +1,12 @@
 exports.config = {
   specs: ['./tests/**/*.js'],
+  suites: {
+    assets: ['./tests/assets/*.js'],
+    files: ['./tests/files/*.js'],
+    network: ['./tests/network/*.js'],
+    pages: ['./tests/pages/*.js']
+  },
+
   screenshotPath: './screenshots/',
   services: ['phantomjs'],
   capabilities: [{
