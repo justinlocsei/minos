@@ -4,22 +4,18 @@ var bluebird = require('bluebird');
 var request = require('request');
 
 var assert = require('minos/assert');
+var assets = require('minos/assets');
 var urls = require('minos').urls;
 
 var getUrl = bluebird.promisify(request);
 
 describe('JavaScript codebase', function() {
 
-  // Check if a JavaScript URL is for the application
-  function isAppFile(url) {
-    return url !== '' && !/google-analytics/.test(url);
-  }
-
   // Get the URLs for all application JavaScript files from a page
   function getAppJsUrls(pageUrl) {
     return browser.url(pageUrl)
       .then(() => browser.getAttribute('script', 'src'))
-      .then(srcs => srcs.filter(isAppFile));
+      .then(srcs => srcs.filter(assets.isAppJavaScript));
   }
 
   it('is combined into a few build files', function() {
