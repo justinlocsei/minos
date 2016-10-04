@@ -18,7 +18,7 @@ exports.config = {
   connectionRetryTimeout: 90000,
   logLevel: 'silent',
   maxInstances: 10,
-  sync: true,
+  sync: false,
   waitforTimeout: 10000,
 
   framework: 'mocha',
