@@ -6,6 +6,7 @@ var request = require('request');
 
 var assert = require('minos/assert');
 var assets = require('minos/assets');
+var config = require('minos/config');
 var urls = require('minos/urls');
 
 var getUrl = bluebird.promisify(request);
@@ -23,7 +24,7 @@ describe('asset optimization', function() {
         return parseInt(match[1], 10);
       });
 
-      previous.push(assert.eventually.match(bluebird.resolve(file), /https:\/\/[^.]+\.kxcdn\.com/));
+      previous.push(assert.eventually.isTrue(bluebird.resolve(file.startsWith(config.cdn))));
       previous.push(assert.eventually.isAbove(maxAge, 60 * 60 * 24 * 30));
 
       return previous;
