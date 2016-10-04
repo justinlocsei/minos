@@ -1,0 +1,14 @@
+{
+  "development": {
+    "site": "https://development-www.coveryourbasics.dev",
+    "cdn": "https://development-www.coveryourbasics.dev"
+  },
+  "staging": {
+    "site": "https://staging-www.coveryourbasics.com",
+    "cdn": "https://assetsstaging-4b66.kxcdn.com"
+  },
+  "production": {
+    "site": "https://www.coveryourbasics.com",
+    "cdn": "https://assets-4b66.kxcdn.com"
+  }
+}
