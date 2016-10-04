@@ -1,9 +1,11 @@
 'use strict';
 
 var bluebird = require('bluebird');
+var lodash = require('lodash');
 var request = require('request');
 
 var assert = require('minos/assert');
+var assets = require('minos/assets');
 var urls = require('minos').urls;
 
 var getUrl = bluebird.promisify(request);
@@ -31,45 +33,32 @@ describe('asset optimization', function() {
   }
 
   it('is used for CSS files', function() {
-    var files = browser
-      .url(urls.home)
-      .elements('link[rel="stylesheet"]')
-      .getAttribute('href');
-
-    return checkOptimized(files);
+    return browser.url(urls.home)
+      .then(() => browser.getAttribute('link[rel="stylesheet"]', 'href'))
+      .then(checkOptimized);
   });
 
   it('is used for JavaScript files', function() {
-    var files = browser
-      .url(urls.home)
-      .elements('script')
-      .getAttribute('src')
-      .filter(src => src !== '' && !/google-analytics/.test(src));
-
-    return checkOptimized(files);
+    return browser.url(urls.home)
+      .then(() => browser.getAttribute('script', 'src'))
+      .then(srcs => srcs.filter(assets.isAppJavaScript))
+      .then(checkOptimized);
   });
 
   it('is used for page images', function() {
-    var files = browser
-      .url(urls.home)
-      .elements('img')
-      .getAttribute('src');
-
-    return checkOptimized(files);
+    return browser.url(urls.home)
+      .then(() => browser.getAttribute('img', 'src'))
+      .then(checkOptimized);
   });
 
   it('is used for CSS background images', function() {
-    var files = browser
-      .url(urls.home)
-      .elements('div')
-      .getAttribute('style')
-      .filter(style => style && style !== '')
-      .map(function(style) {
-        var match = style.match(/url\(([^\)]+)\)/);
-        return match[1];
+    return browser.url(urls.home)
+      .then(() => browser.getAttribute('div', 'style'))
+      .then(function(styles) {
+        var withBg = lodash.compact(styles)
+          .map(style => style.match(/url\(([^\)]+)\)/)[1]);
+        return checkOptimized(withBg);
       });
-
-    return checkOptimized(files);
   });
 
 });

@@ -4,6 +4,7 @@ var bluebird = require('bluebird');
 var request = require('request');
 
 var assert = require('minos/assert');
+var assets = require('minos/assets');
 var urls = require('minos').urls;
 
 var getUrl = bluebird.promisify(request);
@@ -53,32 +54,23 @@ describe('gzip compression', function() {
   });
 
   it('is applied to CSS files', function() {
-    var files = browser
-      .url(urls.home)
-      .elements('link[rel="stylesheet"]')
-      .getAttribute('href');
-
-    return checkEncoding(files);
+    return browser.url(urls.home)
+      .then(() => browser.getAttribute('link[rel="stylesheet"]', 'href'))
+      .then(checkEncoding);
   });
 
   it('is applied to JavaScript files', function() {
-    var files = browser
-      .url(urls.home)
-      .elements('script')
-      .getAttribute('src')
-      .filter(src => src !== '');
-
-    return checkEncoding(files);
+    return browser.url(urls.home)
+      .then(() => browser.getAttribute('script', 'src'))
+      .then(srcs => srcs.filter(assets.isAppJavaScript))
+      .then(checkEncoding);
   });
 
   it('is applied to SVG files', function() {
-    var files = browser
-      .url(urls.home)
-      .elements('img')
-      .getAttribute('src')
-      .filter(src => /\.svg/.test(src));
-
-    return checkEncoding(files);
+    return browser.url(urls.home)
+      .then(() => browser.getAttribute('img', 'src'))
+      .then(srcs => srcs.filter(src => /\.svg/.test(src)))
+      .then(checkEncoding);
   });
 
 });
