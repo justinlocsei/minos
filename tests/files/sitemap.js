@@ -6,7 +6,7 @@ var urlParse = require('url').parse;
 var xml2js = require('xml2js');
 
 var assert = require('minos/assert');
-var urls = require('minos').urls;
+var urls = require('minos/urls');
 
 var getUrl = bluebird.promisify(request.get);
 var parseXml = bluebird.promisify(xml2js.parseString);

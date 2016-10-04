@@ -6,7 +6,7 @@ var request = require('request');
 
 var assert = require('minos/assert');
 var assets = require('minos/assets');
-var urls = require('minos').urls;
+var urls = require('minos/urls');
 
 var getUrl = bluebird.promisify(request);
 
