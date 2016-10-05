@@ -1,5 +1,18 @@
 'use strict';
 
+var config = require('minos/config');
+
+var phantomConfig = {
+  browserName: 'phantomjs'
+};
+
+if (config.selfSigned) {
+  phantomConfig['phantomjs.cli.args'] = [
+    '--ignore-ssl-errors=true',
+    '--web-security=false'
+  ];
+}
+
 module.exports = {
   config: {
     specs: ['./tests/**/*.js'],
@@ -12,9 +25,7 @@ module.exports = {
 
     screenshotPath: './screenshots/',
     services: ['phantomjs'],
-    capabilities: [{
-      browserName: 'phantomjs'
-    }],
+    capabilities: [phantomConfig],
 
     coloredLogs: true,
     connectionRetryCount: 3,

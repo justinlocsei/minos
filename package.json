@@ -7,7 +7,7 @@
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
     "test": "./scripts/test.sh",
-    "selenium": "cd vendor && java -jar selenium.jar -trustAllSSLCertificates"
+    "selenium": "cd vendor && java -jar selenium.jar"
   },
   "repository": {
     "type": "git",
