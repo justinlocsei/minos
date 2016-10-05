@@ -2,18 +2,21 @@
   "development": {
     "siteUrl": "https://development-www.coveryourbasics.dev",
     "cdnUrl": "https://development-www.coveryourbasics.dev",
+    "isCrawlable": false,
     "usesSelfSignedCertificate": true,
     "usesVarnish": false
   },
   "staging": {
     "siteUrl": "https://staging-www.coveryourbasics.com",
     "cdnUrl": "https://assetsstaging-4b66.kxcdn.com",
+    "isCrawlable": false,
     "usesSelfSignedCertificate": false,
     "usesVarnish": true
   },
   "production": {
     "siteUrl": "https://www.coveryourbasics.com",
     "cdnUrl": "https://assets-4b66.kxcdn.com",
+    "isCrawlable": true,
     "usesSelfSignedCertificate": false,
     "usesVarnish": true
   }
