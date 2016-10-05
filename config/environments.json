@@ -2,6 +2,7 @@
   "development": {
     "siteUrl": "https://development-www.coveryourbasics.dev",
     "cdnUrl": "https://development-www.coveryourbasics.dev",
+    "hasFarFutureAssets": false,
     "isCrawlable": false,
     "usesSelfSignedCertificate": true,
     "usesVarnish": false
@@ -9,6 +10,7 @@
   "staging": {
     "siteUrl": "https://staging-www.coveryourbasics.com",
     "cdnUrl": "https://assetsstaging-4b66.kxcdn.com",
+    "hasFarFutureAssets": true,
     "isCrawlable": false,
     "usesSelfSignedCertificate": false,
     "usesVarnish": true
@@ -16,6 +18,7 @@
   "production": {
     "siteUrl": "https://www.coveryourbasics.com",
     "cdnUrl": "https://assets-4b66.kxcdn.com",
+    "hasFarFutureAssets": true,
     "isCrawlable": true,
     "usesSelfSignedCertificate": false,
     "usesVarnish": true
