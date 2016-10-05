@@ -6,6 +6,7 @@ var https = require('https');
 var path = require('path');
 var Promise = require('bluebird');
 var request = require('request');
+var temp = require('temp').track();
 var urlParse = require('url').parse;
 
 var config = require('minos/config');
@@ -25,7 +26,7 @@ function getCaCertificate() {
 }
 
 /**
- * Return a promise to get a URL
+ * Fetch a URL as an in-memory response object
  *
  * This also checks if the current environment uses a self-signed certificate
  * and passes that certificate if it is available.
@@ -33,6 +34,7 @@ function getCaCertificate() {
  * @param {string} url The URL to load
  * @param {object} [options] Additional options to pass to request
  * @returns {Promise} The results of fetching the URL
+ * @resolve {object} A response object
  */
 function fetch(url, options) {
   var settings = Object.assign({
@@ -51,6 +53,40 @@ function fetch(url, options) {
 }
 
 /**
+ * Fetch a URL as a local file
+ *
+ * This stores the URL as a local temporary file, and uses a self-signed
+ * certificate if the current environment requires one.
+ *
+ * @param {string} url The URL to load
+ * @param {object} [options] Additional options to pass to request
+ * @returns {Promise} The results of downloading the file
+ * @resolve {string} The path to the local file
+ */
+function fetchFile(url, options) {
+  var settings = Object.assign({
+    method: 'GET'
+  }, options || {});
+
+  settings.url = url;
+
+  if (config.usesSelfSignedCertificate) {
+    settings.agentOptions = {
+      ca: getCaCertificate()
+    };
+  }
+
+  return new Promise(function(resolve, reject) {
+    var localFile = temp.createWriteStream();
+    request(settings).pipe(localFile);
+
+    localFile
+      .on('error', error => reject(error))
+      .on('finish', () => resolve(localFile.path));
+  });
+}
+
+/**
  * Fetch a URL as a readable stream
  *
  * This uses the correct request factory for fetching the URL, based on the
@@ -59,6 +95,7 @@ function fetch(url, options) {
  * @param {string} url The URL to fetch
  * @param {object} [options] Additional options to pass to http or https
  * @returns {Promise} The results of the fetching the URL
+ * @resolve {stream.Readable} A readable stream
  */
 function fetchStream(url, options) {
   var parsed = urlParse(url);
@@ -85,5 +122,6 @@ function fetchStream(url, options) {
 
 module.exports = {
   fetch: fetch,
+  fetchFile: fetchFile,
   fetchStream: fetchStream
 };
