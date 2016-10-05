@@ -2,14 +2,12 @@
 
 var bluebird = require('bluebird');
 var lodash = require('lodash');
-var request = require('request');
 
 var assert = require('minos/assert');
 var assets = require('minos/assets');
 var config = require('minos/config');
+var requests = require('minos/requests');
 var urls = require('minos/urls');
-
-var getUrl = bluebird.promisify(request);
 
 describe('asset optimization', function() {
 
@@ -19,7 +17,7 @@ describe('asset optimization', function() {
   // have an aggresive expires header set.
   function checkOptimized(files) {
     var checks = files.reduce(function(previous, file) {
-      var maxAge = getUrl(file).then(function(response) {
+      var maxAge = requests.fetch(file).then(function(response) {
         var match = response.headers['cache-control'].match(/max-age=(\d+)/);
         return parseInt(match[1], 10);
       });

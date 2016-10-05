@@ -1,13 +1,11 @@
 'use strict';
 
 var bluebird = require('bluebird');
-var request = require('request');
 
 var assert = require('minos/assert');
 var assets = require('minos/assets');
+var requests = require('minos/requests');
 var urls = require('minos/urls');
-
-var getUrl = bluebird.promisify(request);
 
 describe('JavaScript codebase', function() {
 
@@ -26,7 +24,7 @@ describe('JavaScript codebase', function() {
   it('is aggressively minified', function() {
     var files = getAppJsUrls(urls.home);
 
-    return bluebird.map(files, file => getUrl(file))
+    return bluebird.map(files, file => requests.fetch(file))
       .then(responses => bluebird.map(responses, response => response.body))
       .then(function(contents) {
         contents.forEach(function(content) {

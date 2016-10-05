@@ -1,13 +1,11 @@
 'use strict';
 
 var bluebird = require('bluebird');
-var request = require('request');
 
 var assert = require('minos/assert');
 var assets = require('minos/assets');
+var requests = require('minos/requests');
 var urls = require('minos/urls');
-
-var getUrl = bluebird.promisify(request);
 
 describe('gzip compression', function() {
 
@@ -33,8 +31,8 @@ describe('gzip compression', function() {
   // acceptable encoding types.
   function checkEncoding(files) {
     var checks = files.reduce(function(previous, file) {
-      var withoutGzip = getUrl({url: file, gzip: false});
-      var withGzip = getUrl({url: file, gzip: true});
+      var withoutGzip = requests.fetch(file, {gzip: false});
+      var withGzip = requests.fetch(file, {gzip: true});
 
       return previous.concat([
         assert.eventually.equal(withGzip.then(getStatus), 200),

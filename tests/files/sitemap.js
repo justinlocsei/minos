@@ -1,27 +1,26 @@
 'use strict';
 
 var bluebird = require('bluebird');
-var request = require('request');
 var urlParse = require('url').parse;
 var xml2js = require('xml2js');
 
 var assert = require('minos/assert');
+var requests = require('minos/requests');
 var urls = require('minos/urls');
 
-var getUrl = bluebird.promisify(request.get);
 var parseXml = bluebird.promisify(xml2js.parseString);
 
 describe('the sitemap', function() {
 
   it('is valid XML', function() {
-    var sitemap = getUrl(urls.sitemap)
+    var sitemap = requests.fetch(urls.sitemap)
       .then(response => parseXml(response.body));
 
     return assert.eventually.isObject(sitemap);
   });
 
   it('contains a single URL per location', function() {
-    return getUrl(urls.sitemap)
+    return requests.fetch(urls.sitemap)
       .then(response => parseXml(response.body))
       .then(function(parsed) {
         var pageUrls = parsed.urlset.url;
@@ -34,11 +33,11 @@ describe('the sitemap', function() {
   });
 
   it('contains only GET-accessible URLs', function() {
-    return getUrl(urls.sitemap)
+    return requests.fetch(urls.sitemap)
       .then(response => parseXml(response.body))
       .then(function(parsed) {
         return bluebird.all(parsed.urlset.url.map(function(pageUrl) {
-          return getUrl(pageUrl.loc[0]);
+          return requests.fetch(pageUrl.loc[0]);
         }));
       })
       .then(function(responses) {
@@ -49,8 +48,8 @@ describe('the sitemap', function() {
   });
 
   it('defines URLs that are not blocked by robots.txt', function() {
-    var getRobots = getUrl(urls.robots);
-    var getSitemap = getUrl(urls.sitemap).then(response => parseXml(response.body));
+    var getRobots = requests.fetch(urls.robots);
+    var getSitemap = requests.fetch(urls.sitemap).then(response => parseXml(response.body));
 
     return bluebird.all([getRobots, getSitemap])
       .then(function(responses) {

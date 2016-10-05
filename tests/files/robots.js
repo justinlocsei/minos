@@ -1,17 +1,13 @@
 'use strict';
 
-var bluebird = require('bluebird');
-var request = require('request');
-
 var assert = require('minos/assert');
+var requests = require('minos/requests');
 var urls = require('minos/urls');
-
-var getUrl = bluebird.promisify(request.get);
 
 describe('robots.txt', function() {
 
   it('disallows the recommendations page', function() {
-    return getUrl(urls.robots)
+    return requests.fetch(urls.robots)
       .then(function(response) {
         var excludes = response.body.split('\n')
           .filter(line => /^Disallow/.test(line))
@@ -22,12 +18,12 @@ describe('robots.txt', function() {
   });
 
   it('points to a valid sitemap', function() {
-    var responseCode = getUrl(urls.robots)
+    var responseCode = requests.fetch(urls.robots)
       .then(function(response) {
         var sitemap = response.body.split('\n')
           .find(line => /^Sitemap/.test(line));
 
-        return getUrl(sitemap.replace(/^Sitemap: /, ''));
+        return requests.fetch(sitemap.replace(/^Sitemap: /, ''));
       })
       .then(response => response.statusCode);
 

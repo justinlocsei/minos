@@ -3,13 +3,10 @@
 var Promise = require('bluebird');
 var https = require('https');
 var isProgressive = require('is-progressive');
-var request = require('request');
 
 var assert = require('minos/assert');
+var requests = require('minos/requests');
 var urls = require('minos/urls');
-
-var getUrl = Promise.promisify(request.get);
-var queryUrl = Promise.promisify(request.head);
 
 // The known sizes of the original development versions of images
 var BETHANY_1X_SIZE = 26869;
@@ -37,7 +34,7 @@ describe('image build process', function() {
       .getAttribute('img[alt="Bethany"]', 'src')
       .then(function(src) {
         assert.match(src, /\.jpg$/);
-        return queryUrl(src);
+        return requests.fetch(src, {method: 'HEAD'});
       })
       .then(response => parseInt(response.headers['content-length'], 10));
 
@@ -49,7 +46,7 @@ describe('image build process', function() {
       .getAttribute('img[alt="Pear body shape"]', 'src')
       .then(function(src) {
         assert.match(src, /\.png$/);
-        return queryUrl(src);
+        return requests.fetch(src, {method: 'HEAD'});
       })
       .then(response => parseInt(response.headers['content-length'], 10));
 
@@ -62,7 +59,7 @@ describe('image build process', function() {
       .then(srcs => srcs.filter(src => /\.svg$/.test(src)));
 
     return Promise.map(svgs, function(svg) {
-      return getUrl(svg).then(response => response.body)
+      return requests.fetch(svg).then(response => response.body)
         .then(function(content) {
           assert.notInclude(content, 'DOCTYPE');
           assert.notInclude(content, '\n');
