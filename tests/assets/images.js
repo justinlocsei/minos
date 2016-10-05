@@ -48,7 +48,7 @@ describe('image build process', function() {
 
   it('compresses SVGs', function() {
     var svgs = browser.url(urls.home)
-      .then(() => browser.getAttribute('img', 'src'))
+      .getAttribute('img', 'src')
       .then(srcs => srcs.filter(src => /\.svg$/.test(src)));
 
     return bluebird.map(svgs, function(svg) {

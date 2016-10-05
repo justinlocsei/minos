@@ -11,14 +11,12 @@ var urls = require('minos/urls');
 describe('the about page', function() {
 
   it('has the expected title', function() {
-    var title = browser.url(urls.about)
-      .then(() => browser.getTitle());
+    var title = browser.url(urls.about).getTitle();
     return assert.eventually.equal(title, 'About - Cover Your Basics');
   });
 
   it('has a visible picture of Bethany', function() {
-    var imageVisible = browser.url(urls.about)
-      .then(() => browser.isVisible('img[alt="Bethany"]'));
+    var imageVisible = browser.url(urls.about).isVisible('img[alt="Bethany"]');
     return assert.eventually.isTrue(imageVisible);
   });
 

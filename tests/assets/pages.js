@@ -10,14 +10,13 @@ describe('page asset mapping', function() {
 
   // Find all CSS files for a page
   function findCss(url) {
-    return browser.url(url)
-      .then(() => browser.getAttribute('link[rel="stylesheet"]', 'href'));
+    return browser.url(url).getAttribute('link[rel="stylesheet"]', 'href');
   }
 
   // Find all JavaScript files for a page
   function findJavaScript(url) {
     return browser.url(url)
-      .then(() => browser.getAttribute('script', 'src'))
+      .getAttribute('script', 'src')
       .then(srcs => srcs.filter(assets.isAppJavaScript));
   }
 

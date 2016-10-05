@@ -12,7 +12,7 @@ describe('JavaScript codebase', function() {
   // Get the URLs for all application JavaScript files from a page
   function getAppJsUrls(pageUrl) {
     return browser.url(pageUrl)
-      .then(() => browser.getAttribute('script', 'src'))
+      .getAttribute('script', 'src')
       .then(srcs => srcs.filter(assets.isAppJavaScript));
   }
 

@@ -10,8 +10,7 @@ describe('CSS codebase', function() {
 
   // Get the URLs of all CSS files available at the given URL
   function getCssUrls(sourceUrl) {
-    return browser.url(sourceUrl)
-      .then(() => browser.getAttribute('link[rel="stylesheet"]', 'href'));
+    return browser.url(sourceUrl).getAttribute('link[rel="stylesheet"]', 'href');
   }
 
   // Get the content of all CSS files as a promise

@@ -53,20 +53,20 @@ describe('gzip compression', function() {
 
   it('is applied to CSS files', function() {
     return browser.url(urls.home)
-      .then(() => browser.getAttribute('link[rel="stylesheet"]', 'href'))
+      .getAttribute('link[rel="stylesheet"]', 'href')
       .then(checkEncoding);
   });
 
   it('is applied to JavaScript files', function() {
     return browser.url(urls.home)
-      .then(() => browser.getAttribute('script', 'src'))
+      .getAttribute('script', 'src')
       .then(srcs => srcs.filter(assets.isAppJavaScript))
       .then(checkEncoding);
   });
 
   it('is applied to SVG files', function() {
     return browser.url(urls.home)
-      .then(() => browser.getAttribute('img', 'src'))
+      .getAttribute('img', 'src')
       .then(srcs => srcs.filter(src => /\.svg/.test(src)))
       .then(checkEncoding);
   });

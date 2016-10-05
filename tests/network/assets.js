@@ -52,26 +52,26 @@ describe('asset optimization', function() {
 
   it(`is ${state} for CSS files`, function() {
     return browser.url(urls.home)
-      .then(() => browser.getAttribute('link[rel="stylesheet"]', 'href'))
+      .getAttribute('link[rel="stylesheet"]', 'href')
       .then(checkValid);
   });
 
   it(`is ${state} for JavaScript files`, function() {
     return browser.url(urls.home)
-      .then(() => browser.getAttribute('script', 'src'))
+      .getAttribute('script', 'src')
       .then(srcs => srcs.filter(assets.isAppJavaScript))
       .then(checkValid);
   });
 
   it(`is ${state} for page images`, function() {
     return browser.url(urls.home)
-      .then(() => browser.getAttribute('img', 'src'))
+      .getAttribute('img', 'src')
       .then(checkValid);
   });
 
   it(`is ${state} for CSS background images`, function() {
     return browser.url(urls.home)
-      .then(() => browser.getAttribute('div', 'style'))
+      .getAttribute('div', 'style')
       .then(function(styles) {
         var withBg = lodash.compact(styles)
           .reduce(function(previous, style) {
