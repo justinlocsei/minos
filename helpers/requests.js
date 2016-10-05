@@ -41,7 +41,7 @@ function fetch(url, options) {
 
   settings.url = url;
 
-  if (config.selfSigned) {
+  if (config.usesSelfSignedCertificate) {
     settings.agentOptions = {
       ca: getCaCertificate()
     };
@@ -71,7 +71,7 @@ function fetchStream(url, options) {
   settings.hostname = parsed.hostname;
   settings.path = parsed.path;
 
-  if (config.selfSigned) {
+  if (config.usesSelfSignedCertificate) {
     settings.ca = getCaCertificate();
   }
 

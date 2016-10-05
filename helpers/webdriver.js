@@ -6,7 +6,7 @@ var phantomConfig = {
   browserName: 'phantomjs'
 };
 
-if (config.selfSigned) {
+if (config.usesSelfSignedCertificate) {
   phantomConfig['phantomjs.cli.args'] = [
     '--ignore-ssl-errors=true',
     '--web-security=false'

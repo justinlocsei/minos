@@ -1,17 +1,17 @@
 {
   "development": {
-    "site": "https://development-www.coveryourbasics.dev",
-    "cdn": "https://development-www.coveryourbasics.dev",
-    "selfSigned": true
+    "siteUrl": "https://development-www.coveryourbasics.dev",
+    "cdnUrl": "https://development-www.coveryourbasics.dev",
+    "usesSelfSignedCertificate": true
   },
   "staging": {
-    "site": "https://staging-www.coveryourbasics.com",
-    "cdn": "https://assetsstaging-4b66.kxcdn.com",
-    "selfSigned": false
+    "siteUrl": "https://staging-www.coveryourbasics.com",
+    "cdnUrl": "https://assetsstaging-4b66.kxcdn.com",
+    "usesSelfSignedCertificate": false
   },
   "production": {
-    "site": "https://www.coveryourbasics.com",
-    "cdn": "https://assets-4b66.kxcdn.com",
-    "selfSigned": false
+    "siteUrl": "https://www.coveryourbasics.com",
+    "cdnUrl": "https://assets-4b66.kxcdn.com",
+    "usesSelfSignedCertificate": false
   }
 }

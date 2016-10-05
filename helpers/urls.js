@@ -10,6 +10,6 @@ var PAGE_PATHS = {
 };
 
 module.exports = Object.keys(PAGE_PATHS).reduce(function(urls, pageName) {
-  urls[pageName] = config.site.replace(/\/$/, '') + '/' + PAGE_PATHS[pageName];
+  urls[pageName] = config.siteUrl.replace(/\/$/, '') + '/' + PAGE_PATHS[pageName];
   return urls;
 }, {});

@@ -22,7 +22,7 @@ describe('asset optimization', function() {
         return parseInt(match[1], 10);
       });
 
-      previous.push(assert.eventually.isTrue(bluebird.resolve(file.startsWith(config.cdn))));
+      previous.push(assert.eventually.isTrue(bluebird.resolve(file.startsWith(config.cdnUrl))));
       previous.push(assert.eventually.isAbove(maxAge, 60 * 60 * 24 * 30));
 
       return previous;
