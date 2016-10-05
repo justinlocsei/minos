@@ -1,10 +1,13 @@
 'use strict';
 
 var bluebird = require('bluebird');
+var robotsCheck = require('robots-txt-guard');
+var robotsParse = require('robots-txt-parse');
 var urlParse = require('url').parse;
 var xml2js = require('xml2js');
 
 var assert = require('minos/assert');
+var config = require('minos/config');
 var requests = require('minos/requests');
 var urls = require('minos/urls');
 
@@ -47,24 +50,28 @@ describe('the sitemap', function() {
       });
   });
 
-  it('defines URLs that are not blocked by robots.txt', function() {
-    var getRobots = requests.fetch(urls.robots);
-    var getSitemap = requests.fetch(urls.sitemap).then(response => parseXml(response.body));
+  if (config.isCrawlable) {
 
-    return bluebird.all([getRobots, getSitemap])
-      .then(function(responses) {
-        var robots = responses[0];
-        var sitemap = responses[1];
+    it('defines URLs that are not blocked by robots.txt', function() {
+      var parseSitemap = requests.fetch(urls.sitemap)
+        .then(response => parseXml(response.body));
 
-        var excludes = robots.body.split('\n')
-          .filter(line => /^Disallow/.test(line))
-          .map(line => line.replace(/^Disallow: /, ''));
+      var parseRobots = requests.fetchStream(urls.robots)
+        .then(response => robotsParse(response))
+        .then(parsed => robotsCheck(parsed));
 
-        sitemap.urlset.url.forEach(function(url) {
-          var path = urlParse(url.loc[0]).path;
-          assert.notInclude(excludes, path);
+      return bluebird.all([parseRobots, parseSitemap])
+        .then(function(responses) {
+          var robots = responses[0];
+          var sitemap = responses[1];
+
+          sitemap.urlset.url.forEach(function(url) {
+            var path = urlParse(url.loc[0]).path;
+            assert.isTrue(robots.isAllowed('*', path));
+          });
         });
-      });
-  });
+    });
+
+  }
 
 });
