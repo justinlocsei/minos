@@ -13,4 +13,6 @@ if (!data) {
   throw new Error('No configuration available for the ' + environment + ' environment');
 }
 
+data.environment = environment;
+
 module.exports = data;
