@@ -31,32 +31,51 @@ describe('asset optimization', function() {
     return bluebird.all(checks);
   }
 
-  it('is used for CSS files', function() {
+  // Ensure that all asset URLs are served without optimization
+  //
+  // This checks that the assets are served in such a way that they will force
+  // the user agent to always revalidate.
+  function checkUnoptimized(files) {
+    return bluebird.map(files, function(file) {
+      var cacheControl = requests.fetch(file).then(response => response.headers['cache-control']);
+      return assert.eventually.equal(cacheControl, 'no-cache');
+    });
+  }
+
+  // Perform the correct optimization check on files for the environment
+  function checkValid(files) {
+    var checker = config.hasFarFutureAssets ? checkOptimized : checkUnoptimized;
+    return checker(files);
+  }
+
+  var state = config.hasFarFutureAssets ? 'enabled' : 'disabled';
+
+  it(`is ${state} for CSS files`, function() {
     return browser.url(urls.home)
       .then(() => browser.getAttribute('link[rel="stylesheet"]', 'href'))
-      .then(checkOptimized);
+      .then(checkValid);
   });
 
-  it('is used for JavaScript files', function() {
+  it(`is ${state} for JavaScript files`, function() {
     return browser.url(urls.home)
       .then(() => browser.getAttribute('script', 'src'))
       .then(srcs => srcs.filter(assets.isAppJavaScript))
-      .then(checkOptimized);
+      .then(checkValid);
   });
 
-  it('is used for page images', function() {
+  it(`is ${state} for page images`, function() {
     return browser.url(urls.home)
       .then(() => browser.getAttribute('img', 'src'))
-      .then(checkOptimized);
+      .then(checkValid);
   });
 
-  it('is used for CSS background images', function() {
+  it(`is ${state} for CSS background images`, function() {
     return browser.url(urls.home)
       .then(() => browser.getAttribute('div', 'style'))
       .then(function(styles) {
         var withBg = lodash.compact(styles)
           .map(style => style.match(/url\(([^\)]+)\)/)[1]);
-        return checkOptimized(withBg);
+        return checkValid(withBg);
       });
   });
 
