@@ -3,6 +3,7 @@
 var bluebird = require('bluebird');
 var lodash = require('lodash');
 var sizeOf = require('image-size');
+var urlParse = require('url').parse;
 
 var assert = require('minos/assert');
 var requests = require('minos/requests');
@@ -56,6 +57,30 @@ describe('the about page', function() {
 
         assert.deepEqual(heights, lodash.sortBy(heights));
         assert.deepEqual(widths, lodash.sortBy(widths));
+      });
+  });
+
+  it('links to the survey section of the home page via the call-to-action button', function() {
+    return browser.url(urls.about)
+      .click('=GET STARTED NOW')
+      .then(() => browser.getUrl())
+      .then(function(url) {
+        var parsed = urlParse(url);
+        var pageUrl = url.replace(parsed.hash, '');
+
+        assert.equal(pageUrl, urls.home);
+
+        return bluebird.all([
+          browser.getLocation(parsed.hash),
+          browser.getLocationInView(parsed.hash)
+        ]);
+      })
+      .then(function(positions) {
+        var absolute = positions[0];
+        var relative = positions[1];
+
+        assert.isAbove(absolute.y, 0);
+        assert.equal(relative.y, 0);
       });
   });
 
