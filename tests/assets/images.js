@@ -1,7 +1,6 @@
 'use strict';
 
-var Promise = require('bluebird');
-var https = require('https');
+var bluebird = require('bluebird');
 var isProgressive = require('is-progressive');
 
 var assert = require('minos/assert');
@@ -17,13 +16,7 @@ describe('image build process', function() {
   it('creates progressive JPEGs', function() {
     var isProgressiveJpeg = browser.url(urls.about)
       .getAttribute('img[alt="Bethany"]', 'src')
-      .then(function(src) {
-        return new Promise(function(resolve, reject) {
-          https
-            .get(src, response => resolve(response))
-            .on('error', error => reject(error));
-        });
-      })
+      .then(src => requests.fetchStream(src))
       .then(stream => isProgressive.stream(stream));
 
     return assert.eventually.isTrue(isProgressiveJpeg);
@@ -58,7 +51,7 @@ describe('image build process', function() {
       .then(() => browser.getAttribute('img', 'src'))
       .then(srcs => srcs.filter(src => /\.svg$/.test(src)));
 
-    return Promise.map(svgs, function(svg) {
+    return bluebird.map(svgs, function(svg) {
       return requests.fetch(svg).then(response => response.body)
         .then(function(content) {
           assert.notInclude(content, 'DOCTYPE');
