@@ -74,7 +74,13 @@ describe('asset optimization', function() {
       .then(() => browser.getAttribute('div', 'style'))
       .then(function(styles) {
         var withBg = lodash.compact(styles)
-          .map(style => style.match(/url\(([^\)]+)\)/)[1]);
+          .reduce(function(previous, style) {
+            var match = style.match(/url\(([^\)]+)\)/);
+            if (match) { previous.push(match[1]); }
+
+            return previous;
+          }, []);
+
         return checkValid(withBg);
       });
   });
