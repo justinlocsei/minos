@@ -20,6 +20,13 @@ describe('robots.txt', function() {
     return requests.fetchStream(urls.robots).then(response => robotsParse(response));
   }
 
+  it('is gzipped', function() {
+    var status = requests.fetch(urls.robots, {gzip: true})
+      .then(response => response.statusCode);
+
+    return assert.eventually.equal(status, 200);
+  });
+
   if (config.isCrawlable) {
 
     it('allows access to public-facing GET pages', function() {

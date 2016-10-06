@@ -22,6 +22,13 @@ describe('the sitemap', function() {
     return assert.eventually.isObject(sitemap);
   });
 
+  it('is gzipped', function() {
+    var status = requests.fetch(urls.sitemap, {gzip: true})
+      .then(response => response.statusCode);
+
+    return assert.eventually.equal(status, 200);
+  });
+
   it('contains a single URL per location', function() {
     return requests.fetch(urls.sitemap)
       .then(response => parseXml(response.body))
