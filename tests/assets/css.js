@@ -35,6 +35,22 @@ describe('CSS codebase', function() {
     });
   });
 
+  it('lacks comments', function() {
+    return getCssContent(urls.home).then(function(contents) {
+      contents.forEach(function(content) {
+        assert.notInclude(content, '/*');
+      });
+    });
+  });
+
+  it('lacks sourcemaps', function() {
+    return getCssContent(urls.home).then(function(contents) {
+      contents.forEach(function(content) {
+        assert.notInclude(content, 'sourceMappingURL');
+      });
+    });
+  });
+
   it('contains media queries', function() {
     return getCssContent(urls.home).then(function(contents) {
       contents.forEach(function(content) {

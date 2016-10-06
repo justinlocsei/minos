@@ -39,4 +39,20 @@ describe('JavaScript codebase', function() {
       });
   });
 
+  it('lacks comments', function() {
+    return getJsContent(urls.home).then(function(contents) {
+      contents.forEach(function(content) {
+        assert.notInclude(content, '/*');
+      });
+    });
+  });
+
+  it('lacks sourcemaps', function() {
+    return getJsContent(urls.home).then(function(contents) {
+      contents.forEach(function(content) {
+        assert.notInclude(content, 'sourceMappingURL');
+      });
+    });
+  });
+
 });
