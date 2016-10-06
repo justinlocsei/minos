@@ -25,7 +25,7 @@ describe('page foundation', function() {
     return browser.url(urls.home)
       .getAttribute('header img[alt="Cover Your Basics"]', 'src')
       .then(function(src) {
-        assert.isTrue(src.startsWith(config.cdnUrl));
+        assert.startsWith(src, config.cdnUrl);
         return requests.fetch(src);
       })
       .then(function(response) {

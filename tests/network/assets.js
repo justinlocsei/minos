@@ -16,17 +16,16 @@ describe('asset optimization', function() {
   // This checks that the assets are served securely over a CDN, and that they
   // have an aggresive expires header set.
   function checkOptimized(files) {
-    var checks = files.reduce(function(previous, file) {
+    var checks = files.map(function(file) {
       var maxAge = requests.fetch(file).then(function(response) {
         var match = response.headers['cache-control'].match(/max-age=(\d+)/);
         return parseInt(match[1], 10);
       });
 
-      previous.push(assert.eventually.isTrue(bluebird.resolve(file.startsWith(config.cdnUrl))));
-      previous.push(assert.eventually.isAbove(maxAge, 60 * 60 * 24 * 30));
+      assert.startsWith(file, config.cdnUrl);
 
-      return previous;
-    }, []);
+      return assert.eventually.isAbove(maxAge, 60 * 60 * 24 * 30);
+    });
 
     return bluebird.all(checks);
   }
