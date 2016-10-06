@@ -16,16 +16,19 @@ describe('JavaScript codebase', function() {
       .then(srcs => srcs.filter(assets.isAppJavaScript));
   }
 
+  // Get the content of all application JavaScript files
+  function getJsContent(url) {
+    return bluebird.map(getAppJsUrls(url), fileUrl => requests.fetch(fileUrl))
+      .then(responses => bluebird.map(responses, response => response.body));
+  }
+
   it('is combined into a few build files', function() {
     var fileCount = getAppJsUrls(urls.home).then(files => files.length);
     return assert.eventually.isBelow(fileCount, 5);
   });
 
   it('is aggressively minified', function() {
-    var files = getAppJsUrls(urls.home);
-
-    return bluebird.map(files, file => requests.fetch(file))
-      .then(responses => bluebird.map(responses, response => response.body))
+    return getJsContent(urls.home)
       .then(function(contents) {
         contents.forEach(function(content) {
           var lines = content.split('\n');
