@@ -14,8 +14,8 @@ describe('CSS codebase', function() {
   }
 
   // Get the content of all CSS files as a promise
-  function getCssContent(fileUrls) {
-    return bluebird.map(fileUrls, fileUrl => requests.fetch(fileUrl))
+  function getCssContent(url) {
+    return bluebird.map(getCssUrls(url), fileUrl => requests.fetch(fileUrl))
       .then(responses => bluebird.map(responses, response => response.body));
   }
 
@@ -25,9 +25,7 @@ describe('CSS codebase', function() {
   });
 
   it('is aggressively minified', function() {
-    var files = getCssUrls(urls.home);
-
-    return getCssContent(files).then(function(contents) {
+    return getCssContent(urls.home).then(function(contents) {
       contents.forEach(function(content) {
         var lines = content.split('\n');
         var contentDensity = content.length / lines.length;
@@ -38,9 +36,7 @@ describe('CSS codebase', function() {
   });
 
   it('contains media queries', function() {
-    var files = getCssUrls(urls.home);
-
-    return getCssContent(files).then(function(contents) {
+    return getCssContent(urls.home).then(function(contents) {
       contents.forEach(function(content) {
         assert.include(content, '@media screen');
       });
@@ -48,9 +44,7 @@ describe('CSS codebase', function() {
   });
 
   it('adds vendor prefixes for experimental properties', function() {
-    var files = getCssUrls(urls.home);
-
-    return getCssContent(files).then(function(contents) {
+    return getCssContent(urls.home).then(function(contents) {
       contents.forEach(function(content) {
         if (content.indexOf('display:flex') !== -1) {
           assert.include(content, '-webkit-flex');
@@ -61,9 +55,7 @@ describe('CSS codebase', function() {
   });
 
   it('does not add prefixes for stable properties', function() {
-    var files = getCssUrls(urls.home);
-
-    return getCssContent(files).then(function(contents) {
+    return getCssContent(urls.home).then(function(contents) {
       contents.forEach(function(content) {
         assert.notInclude(content, '-moz-opacity');
         assert.notInclude(content, '-ms-filter');
