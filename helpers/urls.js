@@ -5,6 +5,7 @@ var config = require('minos/config');
 var PAGE_PATHS = {
   about: 'about',
   home: '',
+  favicon: 'favicon.ico',
   robots: 'robots.txt',
   sitemap: 'sitemap.xml'
 };
