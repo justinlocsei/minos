@@ -16,6 +16,20 @@ describe('the about page', function() {
     return assert.eventually.equal(title, 'About - Cover Your Basics');
   });
 
+  it('has the expected Facebook title', function() {
+    var title = browser.url(urls.about)
+      .getAttribute('meta[property="og:title"]', 'content');
+
+    return assert.eventually.equal(title, 'About');
+  });
+
+  it('has a valid Facebook share URL', function() {
+    var url = browser.url(urls.about)
+      .getAttribute('meta[property="og:url"]', 'content');
+
+    return assert.eventually.equal(url, urls.about);
+  });
+
   it('has a visible picture of Bethany', function() {
     var imageVisible = browser.url(urls.about).isVisible('img[alt="Bethany"]');
     return assert.eventually.isTrue(imageVisible);
