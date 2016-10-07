@@ -1,8 +1,6 @@
 'use strict';
 
 var bluebird = require('bluebird');
-var lodash = require('lodash');
-var sizeOf = require('image-size');
 var urlParse = require('url').parse;
 
 var assert = require('minos/assert');
@@ -45,33 +43,10 @@ describe('the about page', function() {
   });
 
   it('provides multiple pixel densities for the image of Bethany', function() {
-    var imageRequests = browser.url(urls.about)
-      .getAttribute('img[alt="Bethany"]', 'srcset')
-      .then(function(srcset) {
-        var srcs = srcset.split(',').map(src => src.trim());
+    var srcset = browser.url(urls.about)
+      .getAttribute('img[alt="Bethany"]', 'srcset');
 
-        var bySize = srcs.reduce(function(previous, src) {
-          var parts = src.split(' ');
-          var url = parts[0];
-          var density = parseFloat(parts[1].replace(/x$/, ''), 10);
-
-          previous[density] = url;
-          return previous;
-        }, {});
-
-        var sortedBySize = Object.keys(bySize).sort().map(k => bySize[k]);
-        return bluebird.map(sortedBySize, url => requests.fetchFile(url));
-      });
-
-    return bluebird.all(imageRequests)
-      .then(function(images) {
-        var dimensions = images.map(image => sizeOf(image));
-        var heights = dimensions.map(d => d.height);
-        var widths = dimensions.map(d => d.width);
-
-        assert.deepEqual(heights, lodash.sortBy(heights));
-        assert.deepEqual(widths, lodash.sortBy(widths));
-      });
+    return assert.eventually.srcsetValid(srcset);
   });
 
   it('links to the survey section of the home page via the call-to-action button', function() {
