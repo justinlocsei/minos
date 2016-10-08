@@ -6,6 +6,7 @@ var PAGE_PATHS = {
   about: 'about',
   home: '',
   favicon: 'favicon.ico',
+  recommendations: 'recommendations',
   robots: 'robots.txt',
   sitemap: 'sitemap.xml'
 };
