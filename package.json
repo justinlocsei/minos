@@ -2,7 +2,6 @@
   "name": "minos",
   "version": "1.0.0",
   "description": "End-to-end tests for Cover Your Basics",
-  "main": "index.js",
   "scripts": {
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
@@ -15,7 +14,7 @@
   },
   "author": "Justin Locsei",
   "license": "ISC",
-  "homepage": "https://github.com/justinlocsei/minos#readme",
+  "homepage": "https://github.com/justinlocsei/minos",
   "dependencies": {
     "bluebird": "^3.4.6",
     "chai": "^3.5.0",
