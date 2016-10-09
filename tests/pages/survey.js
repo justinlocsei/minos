@@ -1,15 +1,19 @@
 'use strict';
 
 var bluebird = require('bluebird');
+var cheerio = require('cheerio');
 
 var assert = require('minos/assert');
+var config = require('minos/config');
 var keys = require('minos/keys');
+var requests = require('minos/requests');
 var sessions = require('minos/sessions');
 var urls = require('minos/urls');
 
 var UI = {
   birthYear: '#survey-birth-year',
-  survey: '#start-survey'
+  survey: '#start-survey',
+  tocTitle: '.l--recommendations__title__text'
 };
 
 var ERRORS = {
@@ -52,15 +56,14 @@ function negate(promise) {
 
 // Enter known good data for the survey
 function enterValidData() {
-  return sessions.create(urls.home)
-    .then(function() {
-      return bluebird.mapSeries([
-        formalityChoice('Casual', 'Occasionally'),
-        styleChoice('Bold, Powerful'),
-        bodyShapeChoice('Hourglass'),
-        sizeChoice('Petite M')
-      ], selection => browser.click(selection));
-    })
+  var selections = [
+    formalityChoice('Casual', 'Occasionally'),
+    styleChoice('Bold, Powerful'),
+    bodyShapeChoice('Hourglass'),
+    sizeChoice('Petite M')
+  ];
+
+  return bluebird.mapSeries(selections, selection => browser.click(selection))
     .then(() => browser.setValue(UI.birthYear, '1984'));
 }
 
@@ -74,12 +77,60 @@ describe('the survey', function() {
     return assert.eventually.equal(destination, urls.home);
   });
 
+  it('is validated on the server when JavaScript is disabled', function() {
+    var error = requests.fetch(urls.home)
+      .then(function(response) {
+        var dom = cheerio.load(response.body);
+        var survey = dom(UI.survey);
+
+        return requests.fetch(config.siteUrl + survey.attr('action'), {
+          method: survey.attr('method'),
+          form: {}
+        });
+      }).then(function(response) {
+        var dom = cheerio.load(response.body);
+        return dom(ERRORS.birthYear).text();
+      });
+
+    return assert.eventually.equal(error, 'Please provide your birth year');
+  });
+
   it('can be submitted with valid data', function() {
-    var destination = enterValidData()
+    var destination = sessions.create(urls.home)
+      .then(() => enterValidData())
       .then(() => browser.submitForm(UI.survey))
       .then(() => browser.getUrl());
 
     return assert.eventually.equal(destination, urls.recommendations);
+  });
+
+  it('can be submitted with valid data when JavaScript is disabled', function() {
+    var title = requests.fetch(urls.home)
+      .then(function(response) {
+        var dom = cheerio.load(response.body);
+        var survey = dom(UI.survey);
+
+        var form = survey.serializeArray().reduce(function(previous, field) {
+          previous[field.name] = field.value;
+          return previous;
+        }, {});
+
+        form.birthYear = '1984';
+        form.bodyShape = 'hourglass';
+        form['formalities[0].frequency'] = 'always';
+        form['sizes[0].isSelected'] = 'true';
+        form['styles[0].isSelected'] = 'true';
+
+        return requests.fetch(config.siteUrl + survey.attr('action'), {
+          method: survey.attr('method'),
+          form: form
+        });
+      }).then(function(response) {
+        var dom = cheerio.load(response.body);
+        return dom(UI.tocTitle).text();
+      });
+
+    return assert.eventually.equal(title, 'Your Basics');
   });
 
   describe('the formality picker', function() {
