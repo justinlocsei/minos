@@ -20,6 +20,8 @@ function srcsetValid(chai) {
     }, {});
 
     var sortedBySize = Object.keys(bySize).sort().map(k => bySize[k]);
+    chai.assert.isAbove(sortedBySize.length, 1, 'only one pixel density provided');
+
     var imageRequests = bluebird.map(sortedBySize, url => requests.fetchFile(url));
 
     return bluebird.all(imageRequests)
