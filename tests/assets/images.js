@@ -5,6 +5,7 @@ var isProgressive = require('is-progressive');
 
 var assert = require('minos/assert');
 var requests = require('minos/requests');
+var ui = require('minos/ui');
 var urls = require('minos/urls');
 
 // The known sizes of the original development versions of images
@@ -15,7 +16,7 @@ describe('image build process', function() {
 
   it('creates progressive JPEGs', function() {
     var isProgressiveJpeg = browser.url(urls.about)
-      .getAttribute('img[alt="Bethany"]', 'src')
+      .getAttribute(ui.about.bethanyImage, 'src')
       .then(src => requests.fetchStream(src))
       .then(stream => isProgressive.stream(stream));
 
@@ -24,26 +25,26 @@ describe('image build process', function() {
 
   it('lightly compresses JPEGs', function() {
     var fileSize = browser.url(urls.about)
-      .getAttribute('img[alt="Bethany"]', 'src')
+      .getAttribute(ui.about.bethanyImage, 'src')
       .then(function(src) {
         assert.match(src, /\.jpg$/);
         return requests.fetch(src, {method: 'HEAD'});
       })
       .then(response => parseInt(response.headers['content-length'], 10));
 
-    return assert.eventually.isBelow(fileSize, BETHANY_1X_SIZE);
+    return assert.eventually.isBelow(fileSize, BETHANY_1X_SIZE, 'file size is not lower than the original');
   });
 
   it('aggressively compresses PNGs', function() {
     var fileSize = browser.url(urls.home)
-      .getAttribute('img[alt="Pear body shape"]', 'src')
+      .getAttribute(ui.home.bodyShapeImage('Pear'), 'src')
       .then(function(src) {
         assert.match(src, /\.png$/);
         return requests.fetch(src, {method: 'HEAD'});
       })
       .then(response => parseInt(response.headers['content-length'], 10));
 
-    return assert.eventually.isBelow(fileSize, PEAR_1X_SIZE * 0.5);
+    return assert.eventually.isBelow(fileSize, PEAR_1X_SIZE * 0.5, 'file size is not significantly lower than the original');
   });
 
   it('compresses SVGs', function() {
