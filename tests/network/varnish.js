@@ -11,14 +11,11 @@ describe('varnish', function() {
 
   if (config.usesVarnish) {
 
-    it('serves the home page', function() {
-      var age = requests.fetch(urls.home).then(response => response.headers.age);
-      return assert.eventually.isAbove(age, 0);
-    });
-
-    it('serves the about page', function() {
-      var age = requests.fetch(urls.about).then(response => response.headers.age);
-      return assert.eventually.isAbove(age, 0);
+    it('is enabled for all pages', function() {
+      return bluebird.map([urls.about, urls.home], function(url) {
+        var age = requests.fetch(url).then(requests.getHeader('age'));
+        return assert.eventually.isAbove(age, 0, `${url} is not served through Varnish`);
+      });
     });
 
   } else {
@@ -26,7 +23,7 @@ describe('varnish', function() {
     it('is disabled for all pages', function() {
       return bluebird.map([urls.about, urls.home], function(url) {
         var age = requests.fetch(url).then(response => response.headers.age);
-        return assert.eventually.isUndefined(age);
+        return assert.eventually.isUndefined(age, `${url} is served through Varnish`);
       });
     });
 
