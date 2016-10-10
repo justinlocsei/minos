@@ -38,7 +38,7 @@ describe('page foundation', function() {
   it('uses the logo as a link to the home page', function() {
     var destination = browser.url(urls.home)
       .click(ui.shared.logo)
-      .then(sessions.getUrl);
+      .then(browser.getUrl);
 
     return assert.eventually.equal(destination, urls.home);
   });
@@ -46,7 +46,7 @@ describe('page foundation', function() {
   it('has a link to the home page in the footer', function() {
     var destination = browser.url(urls.home)
       .click(ui.shared.footerHomeLink)
-      .then(sessions.getUrl);
+      .then(browser.getUrl);
 
     return assert.eventually.equal(destination, urls.home);
   });
@@ -54,7 +54,7 @@ describe('page foundation', function() {
   it('has a link to the about page in the footer', function() {
     var destination = browser.url(urls.home)
       .click(ui.shared.footerAboutLink)
-      .then(sessions.getUrl);
+      .then(browser.getUrl);
 
     return assert.eventually.equal(destination, urls.about);
   });

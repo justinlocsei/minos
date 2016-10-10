@@ -54,7 +54,7 @@ describe('the about page', function() {
   it('links to the survey section of the home page via the call-to-action button', function() {
     return browser.url(urls.about)
       .click(ui.about.startSurvey)
-      .then(sessions.getUrl)
+      .then(browser.getUrl)
       .then(function(url) {
         var parsed = parseUrl(url);
         var pageUrl = url.replace(parsed.hash, '');
