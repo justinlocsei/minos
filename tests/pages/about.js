@@ -1,10 +1,12 @@
 'use strict';
 
 var bluebird = require('bluebird');
-var urlParse = require('url').parse;
+var parseUrl = require('url').parse;
 
 var assert = require('minos/assert');
 var requests = require('minos/requests');
+var sessions = require('minos/sessions');
+var ui = require('minos/ui');
 var urls = require('minos/urls');
 
 describe('the about page', function() {
@@ -16,45 +18,45 @@ describe('the about page', function() {
 
   it('has the expected Facebook title', function() {
     var title = browser.url(urls.about)
-      .getAttribute('meta[property="og:title"]', 'content');
+      .getAttribute(ui.shared.facebookTitleMeta, 'content');
 
     return assert.eventually.equal(title, 'About');
   });
 
   it('has a valid Facebook share URL', function() {
     var url = browser.url(urls.about)
-      .getAttribute('meta[property="og:url"]', 'content');
+      .getAttribute(ui.shared.facebookUrlMeta, 'content');
 
     return assert.eventually.equal(url, urls.about);
   });
 
   it('has a visible picture of Bethany', function() {
-    var imageVisible = browser.url(urls.about).isVisible('img[alt="Bethany"]');
+    var imageVisible = browser.url(urls.about).isVisible(ui.about.bethanyImage);
     return assert.eventually.isTrue(imageVisible);
   });
 
   it('has a non-broken picture of Bethany', function() {
     var status = browser.url(urls.about)
-      .getAttribute('img[alt="Bethany"]', 'src')
+      .getAttribute(ui.about.bethanyImage, 'src')
       .then(src => requests.fetch(src, {method: 'HEAD'}))
-      .then(response => response.statusCode);
+      .then(requests.getStatus);
 
     return assert.eventually.equal(status, 200);
   });
 
   it('provides multiple pixel densities for the image of Bethany', function() {
     var srcset = browser.url(urls.about)
-      .getAttribute('img[alt="Bethany"]', 'srcset');
+      .getAttribute(ui.about.bethanyImage, 'srcset');
 
     return assert.eventually.srcsetValid(srcset);
   });
 
   it('links to the survey section of the home page via the call-to-action button', function() {
     return browser.url(urls.about)
-      .click('=GET STARTED NOW')
-      .then(() => browser.getUrl())
+      .click(ui.about.startSurvey)
+      .then(sessions.getUrl)
       .then(function(url) {
-        var parsed = urlParse(url);
+        var parsed = parseUrl(url);
         var pageUrl = url.replace(parsed.hash, '');
 
         assert.equal(pageUrl, urls.home);
