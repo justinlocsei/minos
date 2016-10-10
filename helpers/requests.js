@@ -120,8 +120,19 @@ function fetchStream(url, options) {
   });
 }
 
+/**
+ * Extract the status code from a response
+ *
+ * @param {object} response A response object
+ * @returns {number} The status code
+ */
+function getStatus(response) {
+  return response.statusCode;
+}
+
 module.exports = {
   fetch: fetch,
   fetchFile: fetchFile,
-  fetchStream: fetchStream
+  fetchStream: fetchStream,
+  getStatus: getStatus
 };
