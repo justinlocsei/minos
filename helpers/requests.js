@@ -136,6 +136,18 @@ function fetchStream(url, options) {
 }
 
 /**
+ * Create a function to get a header from a response
+ *
+ * @param {string} header The name of a header
+ * @returns {function}
+ */
+function getHeader(header) {
+  return function(response) {
+    return response.headers[header];
+  };
+}
+
+/**
  * Extract the status code from a response
  *
  * @param {object} response A response object
@@ -150,5 +162,6 @@ module.exports = {
   fetchDom: fetchDom,
   fetchFile: fetchFile,
   fetchStream: fetchStream,
+  getHeader: getHeader,
   getStatus: getStatus
 };
