@@ -34,7 +34,7 @@ describe('the CSS codebase', function() {
       var lines = content.split('\n');
       var contentDensity = content.length / lines.length;
 
-      assert.isAbove(contentDensity, 2000, 'plentiful whitespace found');
+      assert.isAbove(contentDensity, 2000, 'low content/whitespace ratio found');
     });
   });
 
