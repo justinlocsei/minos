@@ -1,26 +1,35 @@
 {
   "development": {
+    "imagesUrl": "https://development-data.coveryourbasics.dev",
     "siteUrl": "https://development-www.coveryourbasics.dev",
     "cdnUrl": "https://development-www.coveryourbasics.dev",
     "hasFarFutureAssets": false,
     "isCrawlable": false,
     "usesSelfSignedCertificate": true,
-    "usesVarnish": false
+    "usesVarnish": false,
+    "amazonTrackingId": "coveryourbasics-development-20",
+    "shopstyleId": "uid3600-33034440-48"
   },
   "staging": {
+    "imagesUrl": "https://mediastaging-4b66.kxcdn.com",
     "siteUrl": "https://staging-www.coveryourbasics.com",
     "cdnUrl": "https://assetsstaging-4b66.kxcdn.com",
     "hasFarFutureAssets": true,
     "isCrawlable": false,
     "usesSelfSignedCertificate": false,
-    "usesVarnish": true
+    "usesVarnish": true,
+    "amazonTrackingId": "coveryourbasics-staging-20",
+    "shopstyleId": "uid3600-33034440-48"
   },
   "production": {
+    "imagesUrl": "https://media-4b66.kxcdn.com",
     "siteUrl": "https://www.coveryourbasics.com",
     "cdnUrl": "https://assets-4b66.kxcdn.com",
     "hasFarFutureAssets": true,
     "isCrawlable": true,
     "usesSelfSignedCertificate": false,
-    "usesVarnish": true
+    "usesVarnish": true,
+    "amazonTrackingId": "coveryourbasics-production-20",
+    "shopstyleId": "uid3600-33034440-48"
   }
 }
