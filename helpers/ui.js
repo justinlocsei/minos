@@ -11,14 +11,21 @@ function bodyShapeImage(name) {
 }
 
 var about = {
-  bethanyImage: 'img[alt="Bethany"]'
+  bethanyImage: 'img[alt="Bethany"]',
+  startSurvey: '.l--about__cta-button'
 };
 
 var home = {
   bodyShapeImage: bodyShapeImage
 };
 
+var shared = {
+  facebookTitleMeta: 'meta[property="og:title"]',
+  facebookUrlMeta: 'meta[property="og:url"]'
+};
+
 module.exports = {
   about: about,
-  home: home
+  home: home,
+  shared: shared
 };
