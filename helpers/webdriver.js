@@ -1,20 +1,47 @@
 'use strict';
 
-var config = require('minos/config');
+var environment = require('minos/config');
 
-var phantomConfig = {
-  browserName: 'phantomjs'
+// A mapping of valid Selenium control keys
+var keys = {
+  return: 'Return',
+  tab: 'Tab'
 };
 
-if (config.usesSelfSignedCertificate) {
-  phantomConfig['phantomjs.cli.args'] = [
-    '--ignore-ssl-errors=true',
-    '--web-security=false'
-  ];
-}
+/**
+ * Create a new config file for webdriver.io
+ *
+ * @param {object} options Options for creating the config
+ * @param {boolean} headless Use a headless browser for the tests
+ * @returns {object}
+ */
+function buildConfig(options) {
+  var settings = Object.assign({
+    headless: true
+  }, options || {});
 
-module.exports = {
-  config: {
+  var phantomjs = {
+    browserName: 'phantomjs'
+  };
+  if (environment.usesSelfSignedCertificate) {
+    phantomjs['phantomjs.cli.args'] = [
+      '--ignore-ssl-errors=true',
+      '--web-security=false'
+    ];
+  }
+
+  var chrome = {
+    browserName: 'chrome'
+  };
+
+  var browsers = [];
+  if (settings.headless) {
+    browsers.push(phantomjs);
+  } else {
+    browsers.push(chrome);
+  }
+
+  return {
     specs: ['./tests/**/*.js'],
     suites: {
       assets: ['./tests/assets/*.js'],
@@ -25,7 +52,7 @@ module.exports = {
 
     screenshotPath: './screenshots/',
     services: ['phantomjs'],
-    capabilities: [phantomConfig],
+    capabilities: browsers,
 
     coloredLogs: true,
     connectionRetryCount: 3,
@@ -38,9 +65,10 @@ module.exports = {
     framework: 'mocha',
     mochaOpts: {ui: 'bdd'},
     reporters: ['spec']
-  },
-  keys: {
-    return: 'Return',
-    tab: 'Tab'
-  }
+  };
+}
+
+module.exports = {
+  buildConfig: buildConfig,
+  keys: keys
 };
