@@ -17,8 +17,8 @@ describe('image build process', function() {
   it('creates progressive JPEGs', function() {
     var isProgressiveJpeg = browser.url(urls.about)
       .getAttribute(ui.about.bethanyImage, 'src')
-      .then(src => requests.fetchStream(src))
-      .then(stream => isProgressive.stream(stream));
+      .then(requests.fetchStream)
+      .then(isProgressive.stream);
 
     return assert.eventually.isTrue(isProgressiveJpeg);
   });

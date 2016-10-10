@@ -14,7 +14,7 @@ describe('robots.txt', function() {
   // Return a promise for a function that checks if a URL is allowed by robots.txt
   function checkRobots() {
     return parseRobots()
-      .then(parsed => robotsChecker(parsed))
+      .then(robotsChecker)
       .then(function(checker) {
         return function checkAccess(url) {
           var path = parseUrl(url).path;
@@ -27,7 +27,7 @@ describe('robots.txt', function() {
   function parseRobots() {
     return requests
       .fetchStream(urls.robots)
-      .then(response => robotsParser(response));
+      .then(robotsParser);
   }
 
   it('is gzipped', function() {

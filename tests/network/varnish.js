@@ -22,7 +22,7 @@ describe('varnish', function() {
 
     it('is disabled for all pages', function() {
       return bluebird.map([urls.about, urls.home], function(url) {
-        var age = requests.fetch(url).then(response => response.headers.age);
+        var age = requests.fetch(url).then(requests.getHeader('age'));
         return assert.eventually.isUndefined(age, `${url} is served through Varnish`);
       });
     });

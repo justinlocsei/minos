@@ -1,8 +1,8 @@
 'use strict';
 
 var bluebird = require('bluebird');
-var robotsCheck = require('robots-txt-guard');
-var robotsParse = require('robots-txt-parse');
+var checkRobots = require('robots-txt-guard');
+var parseRobots = require('robots-txt-parse');
 var urlParse = require('url').parse;
 var xml2js = require('xml2js');
 
@@ -67,8 +67,8 @@ describe('the sitemap', function() {
         .then(parseSitemap);
 
       var getRobots = requests.fetchStream(urls.robots)
-        .then(response => robotsParse(response))
-        .then(parsed => robotsCheck(parsed));
+        .then(parseRobots)
+        .then(checkRobots);
 
       return bluebird.all([getRobots, getSitemap]).then(function(responses) {
         var robots = responses[0];

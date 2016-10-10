@@ -18,7 +18,7 @@ describe('JavaScript codebase', function() {
 
   // Get the content of all application JavaScript files and pass them to a processor
   function getJavaScriptContent(url, processor) {
-    return bluebird.map(getAppJavaScriptUrls(url), fileUrl => requests.fetch(fileUrl))
+    return bluebird.map(getAppJavaScriptUrls(url), requests.fetch)
       .then(responses => bluebird.map(responses, response => response.body))
       .then(function(contents) {
         return contents.forEach(function(content) {

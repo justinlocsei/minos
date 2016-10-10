@@ -32,7 +32,7 @@ describe('asset optimization', function() {
   // the user agent to always revalidate.
   function checkUnoptimized(files) {
     return bluebird.map(files, function(file) {
-      var cacheControl = requests.fetch(file).then(response => response.headers['cache-control']);
+      var cacheControl = requests.fetch(file).then(requests.getHeader('cache-control'));
       return assert.eventually.equal(cacheControl, 'no-cache', `${file} is allowed to be cached`);
     });
   }

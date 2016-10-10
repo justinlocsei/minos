@@ -15,7 +15,7 @@ describe('the CSS codebase', function() {
 
   // Get the content of all CSS files as a promise that calls a processor
   function getCssContent(url, processor) {
-    return bluebird.map(getCssUrls(url), fileUrl => requests.fetch(fileUrl))
+    return bluebird.map(getCssUrls(url), requests.fetch)
       .then(responses => bluebird.map(responses, response => response.body))
       .then(function(contents) {
         contents.forEach(function(content) {

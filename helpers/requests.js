@@ -96,7 +96,7 @@ function fetchFile(url, options) {
     request(settings).pipe(localFile);
 
     localFile
-      .on('error', error => reject(error))
+      .on('error', reject)
       .on('finish', () => resolve(localFile.path));
   });
 }
@@ -129,8 +129,8 @@ function fetchStream(url, options) {
 
   return new Promise(function(resolve, reject) {
     factory
-      .get(settings, response => resolve(response))
-      .on('error', error => reject(error))
+      .get(settings, resolve)
+      .on('error', reject)
       .end();
   });
 }
