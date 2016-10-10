@@ -3,9 +3,11 @@
 var bluebird = require('bluebird');
 
 var assert = require('minos/assert');
+var assets = require('minos/assets');
 var config = require('minos/config');
 var requests = require('minos/requests');
 var sessions = require('minos/sessions');
+var ui = require('minos/ui');
 var urls = require('minos/urls');
 
 describe('the home page', function() {
@@ -17,45 +19,40 @@ describe('the home page', function() {
 
   it('has the expected Facebook title', function() {
     var title = browser.url(urls.home)
-      .getAttribute('meta[property="og:title"]', 'content');
+      .getAttribute(ui.shared.facebookTitleMeta, 'content');
 
     return assert.eventually.equal(title, 'Fill Out Our Survey');
   });
 
   it('has a valid Facebook share URL', function() {
     var url = browser.url(urls.home)
-      .getAttribute('meta[property="og:url"]', 'content');
+      .getAttribute(ui.shared.facebookUrlMeta, 'content');
 
     return assert.eventually.equal(url, urls.home);
   });
 
   it('has a valid image for the pitch', function() {
     var status = browser.url(urls.home)
-      .getAttribute('.l--pitch [class*="graphic"]', 'style')
-      .then(function(style) {
-        var match = style.match(/url\(([^\)]+)\)/);
-        return requests.fetch(match[1]);
-      })
-      .then(response => response.statusCode);
+      .getAttribute(ui.home.pitchGraphic, 'style')
+      .then(style => requests.fetch(assets.getBackgroundImage(style)))
+      .then(requests.getStatus);
 
     return assert.eventually.equal(status, 200);
   });
 
   it('uses valid images for the formalities', function() {
     var srcs = browser.url(urls.home)
-      .getAttribute('img[class*="formality"]', 'src');
+      .getAttribute(ui.home.formalityImages, 'src');
 
     return bluebird.map(srcs, function(src) {
-      return requests.fetch(src, {method: 'HEAD'})
-        .then(function(response) {
-          assert.equal(response.statusCode, 200);
-        });
+      var status = requests.fetch(src, {method: 'HEAD'}).then(requests.getStatus);
+      return assert.eventually.equal(status, 200, `${src} is invalid`);
     });
   });
 
   it('uses high-DPI images for the formalities', function() {
     var srcsets = browser.url(urls.home)
-      .getAttribute('img[class*="formality"]', 'srcset');
+      .getAttribute(ui.home.formalityImages, 'srcset');
 
     return bluebird.map(srcsets, function(srcset) {
       return assert.eventually.srcsetValid(bluebird.resolve(srcset));
@@ -64,7 +61,7 @@ describe('the home page', function() {
 
   it('uses valid images for the body shapes', function() {
     var srcs = browser.url(urls.home)
-      .getAttribute('img[class*="body-shape"]', 'src');
+      .getAttribute(ui.home.bodyShapeImages, 'src');
 
     return bluebird.map(srcs, function(src) {
       return requests.fetch(src, {method: 'HEAD'})
@@ -76,7 +73,7 @@ describe('the home page', function() {
 
   it('uses high-DPI images for the body shapes', function() {
     var srcsets = browser.url(urls.home)
-      .getAttribute('img[class*="body-shape"]', 'srcset');
+      .getAttribute(ui.home.bodyShapeImages, 'srcset');
 
     return bluebird.map(srcsets, function(srcset) {
       return assert.eventually.srcsetValid(bluebird.resolve(srcset));
@@ -85,10 +82,10 @@ describe('the home page', function() {
 
   it('scrolls to the survey when clicking on the start-survey button', function() {
     return sessions.create(urls.home)
-      .click('=Fill Out Our Survey')
+      .click(ui.home.startSurvey)
       .then(function() {
         return browser.waitUntil(function() {
-          return browser.isVisibleWithinViewport('#start-survey');
+          return browser.isVisibleWithinViewport(ui.survey.form);
         }, 1000, 'The survey was not scrolled to');
       });
   });
@@ -96,8 +93,9 @@ describe('the home page', function() {
   if (config.usesVarnish) {
 
     it('is served through Varnish when a user is registered', function() {
-      var maxAge = requests.fetch(urls.home, {headers: {cookie: 'registered=1'}})
-        .then(response => response.headers.age);
+      var maxAge = requests
+        .fetch(urls.home, {headers: {cookie: 'registered=1'}})
+        .then(requests.getHeader('age'));
 
       return assert.eventually.isAbove(maxAge, 0);
     });
