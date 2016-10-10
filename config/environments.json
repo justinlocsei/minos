@@ -1,35 +1,35 @@
 {
   "development": {
-    "imagesUrl": "https://development-data.coveryourbasics.dev",
-    "siteUrl": "https://development-www.coveryourbasics.dev",
+    "amazonTrackingId": "coveryourbasics-development-20",
     "cdnUrl": "https://development-www.coveryourbasics.dev",
     "hasFarFutureAssets": false,
+    "imagesUrl": "https://development-data.coveryourbasics.dev",
     "isCrawlable": false,
+    "shopstyleId": "uid3600-33034440-48",
+    "siteUrl": "https://development-www.coveryourbasics.dev",
     "usesSelfSignedCertificate": true,
-    "usesVarnish": false,
-    "amazonTrackingId": "coveryourbasics-development-20",
-    "shopstyleId": "uid3600-33034440-48"
+    "usesVarnish": false
   },
   "staging": {
-    "imagesUrl": "https://mediastaging-4b66.kxcdn.com",
-    "siteUrl": "https://staging-www.coveryourbasics.com",
+    "amazonTrackingId": "coveryourbasics-staging-20",
     "cdnUrl": "https://assetsstaging-4b66.kxcdn.com",
     "hasFarFutureAssets": true,
+    "imagesUrl": "https://mediastaging-4b66.kxcdn.com",
     "isCrawlable": false,
+    "shopstyleId": "uid3600-33034440-48",
+    "siteUrl": "https://staging-www.coveryourbasics.com",
     "usesSelfSignedCertificate": false,
-    "usesVarnish": true,
-    "amazonTrackingId": "coveryourbasics-staging-20",
-    "shopstyleId": "uid3600-33034440-48"
+    "usesVarnish": true
   },
   "production": {
-    "imagesUrl": "https://media-4b66.kxcdn.com",
-    "siteUrl": "https://www.coveryourbasics.com",
+    "amazonTrackingId": "coveryourbasics-production-20",
     "cdnUrl": "https://assets-4b66.kxcdn.com",
     "hasFarFutureAssets": true,
+    "imagesUrl": "https://media-4b66.kxcdn.com",
     "isCrawlable": true,
+    "shopstyleId": "uid3600-33034440-48",
+    "siteUrl": "https://www.coveryourbasics.com",
     "usesSelfSignedCertificate": false,
-    "usesVarnish": true,
-    "amazonTrackingId": "coveryourbasics-production-20",
-    "shopstyleId": "uid3600-33034440-48"
+    "usesVarnish": true
   }
 }
