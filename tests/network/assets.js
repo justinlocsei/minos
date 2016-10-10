@@ -1,7 +1,6 @@
 'use strict';
 
 var bluebird = require('bluebird');
-var lodash = require('lodash');
 
 var assert = require('minos/assert');
 var assets = require('minos/assets');
@@ -16,18 +15,15 @@ describe('asset optimization', function() {
   // This checks that the assets are served securely over a CDN, and that they
   // have an aggresive expires header set.
   function checkOptimized(files) {
-    var checks = files.map(function(file) {
+    return bluebird.map(files, function(file) {
       var maxAge = requests.fetch(file).then(function(response) {
         var match = response.headers['cache-control'].match(/max-age=(\d+)/);
         return parseInt(match[1], 10);
       });
 
-      assert.startsWith(file, config.cdnUrl);
-
-      return assert.eventually.isAbove(maxAge, 60 * 60 * 24 * 30);
+      assert.startsWith(file, config.cdnUrl, `${file} is not hosted on the CDN`);
+      return assert.eventually.isAbove(maxAge, 60 * 60 * 24 * 30, `${file} has a short expiration time`);
     });
-
-    return bluebird.all(checks);
   }
 
   // Ensure that all asset URLs are served without optimization
@@ -37,7 +33,7 @@ describe('asset optimization', function() {
   function checkUnoptimized(files) {
     return bluebird.map(files, function(file) {
       var cacheControl = requests.fetch(file).then(response => response.headers['cache-control']);
-      return assert.eventually.equal(cacheControl, 'no-cache');
+      return assert.eventually.equal(cacheControl, 'no-cache', `${file} is allowed to be cached`);
     });
   }
 
@@ -69,19 +65,13 @@ describe('asset optimization', function() {
   });
 
   it(`is ${state} for CSS background images`, function() {
-    return browser.url(urls.home)
-      .getAttribute('div', 'style')
-      .then(function(styles) {
-        var withBg = lodash.compact(styles)
-          .reduce(function(previous, style) {
-            var match = style.match(/url\(([^\)]+)\)/);
-            if (match) { previous.push(match[1]); }
+    return requests.fetchDom(urls.home).then(function($) {
+      var images = $('[style*="background-image"]')
+        .map((i, el) => assets.getBackgroundImage($(el).attr('style')))
+        .get();
 
-            return previous;
-          }, []);
-
-        return checkValid(withBg);
-      });
+      return checkValid(images);
+    });
   });
 
 });
