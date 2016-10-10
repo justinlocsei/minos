@@ -38,5 +38,9 @@ module.exports = {
     framework: 'mocha',
     mochaOpts: {ui: 'bdd'},
     reporters: ['spec']
+  },
+  keys: {
+    return: 'Return',
+    tab: 'Tab'
   }
 };

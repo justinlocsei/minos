@@ -8,7 +8,7 @@ var parseUrl = require('url').parse;
 
 var assert = require('minos/assert');
 var config = require('minos/config');
-var keys = require('minos/keys');
+var keys = require('minos/webdriver').keys;
 var requests = require('minos/requests');
 var sessions = require('minos/sessions');
 var urls = require('minos/urls');
