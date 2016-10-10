@@ -22,11 +22,11 @@ function srcsetValid(chai) {
     var sortedBySize = Object.keys(bySize).sort().map(k => bySize[k]);
     chai.assert.isAbove(sortedBySize.length, 1, 'only one pixel density provided');
 
-    var imageRequests = bluebird.map(sortedBySize, url => requests.fetchFile(url));
+    var imageRequests = bluebird.map(sortedBySize, requests.fetchFile);
 
     return bluebird.all(imageRequests)
       .then(function(images) {
-        var dimensions = images.map(image => sizeOf(image));
+        var dimensions = images.map(sizeOf);
         var heights = dimensions.map(d => d.height);
         var widths = dimensions.map(d => d.width);
 
