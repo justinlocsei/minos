@@ -25,6 +25,28 @@ function createSession(url, options) {
     }, settings.javaScriptTimeout, 'Client-side React render timed out');
 }
 
+/**
+ * Return a promise to get the current page's title
+ *
+ * @returns {Promise}
+ * @resolve {string} The current title
+ */
+function getTitle() {
+  return browser.getTitle();
+}
+
+/**
+ * Return a promise to get the current page's URL
+ *
+ * @returns {Promise}
+ * @resolve {string} The current URL
+ */
+function getUrl() {
+  return browser.getUrl();
+}
+
 module.exports = {
-  create: createSession
+  create: createSession,
+  getTitle: getTitle,
+  getUrl: getUrl
 };
