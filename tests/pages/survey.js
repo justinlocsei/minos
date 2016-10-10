@@ -2,6 +2,9 @@
 
 var bluebird = require('bluebird');
 var cheerio = require('cheerio');
+var lodash = require('lodash');
+var parseQuerystring = require('querystring').parse;
+var parseUrl = require('url').parse;
 
 var assert = require('minos/assert');
 var config = require('minos/config');
@@ -11,8 +14,20 @@ var sessions = require('minos/sessions');
 var urls = require('minos/urls');
 
 var UI = {
+  backToTop: '.l--recommendations__basic__return-link',
+  basic: '.l--recommendations__basic',
   birthYear: '#survey-birth-year',
+  dismissEmail: '.l--registration-pitch__dismiss',
+  dismissEmailConfirmation: '.l--registration-pitch__complete__dismiss',
+  emailConfirmation: '.l--registration-pitch__complete__text',
+  emailError: '.c--registration__error',
+  emailForm: '.l--registration-pitch__registration',
+  emailInput: '#email',
+  garment: '.c--garment__preview',
+  priceGroup: '.c--recommendations__price-group',
   survey: '#start-survey',
+  tocGarment: '.c--basic-teaser__name',
+  tocLink: '.c--basic-teaser',
   tocTitle: '.l--recommendations__title__text'
 };
 
@@ -57,10 +72,10 @@ function negate(promise) {
 // Enter known good data for the survey
 function enterValidData() {
   var selections = [
-    formalityChoice('Casual', 'Occasionally'),
+    formalityChoice('Business Casual', '5+ times per week'),
     styleChoice('Bold, Powerful'),
     bodyShapeChoice('Hourglass'),
-    sizeChoice('Petite M')
+    sizeChoice('M')
   ];
 
   return bluebird.mapSeries(selections, selection => browser.click(selection))
@@ -327,6 +342,236 @@ describe('the survey', function() {
         .then(() => browser.getValue(UI.birthYear));
 
       return assert.eventually.equal(year, '');
+    });
+
+  });
+
+});
+
+describe('the recommendations page', function() {
+
+  // Get the recommendations by submitting a valid survey
+  function getRecommendations() {
+    return sessions.create(urls.home)
+      .then(() => enterValidData())
+      .then(() => browser.submitForm(UI.survey));
+  }
+
+  // Get a cheerio instance of the recommendations page's markup
+  function getDom() {
+    return getRecommendations()
+      .then(() => browser.getSource())
+      .then(source => bluebird.resolve(cheerio.load(source)));
+  }
+
+  // Get a selector for a garment in the table of contents
+  function tocGarment(name) {
+    return `${UI.tocGarment}=${name}`;
+  }
+
+  it('shows a table of contents with multiple basics', function() {
+    var uniqueNames = getRecommendations()
+      .then(() => browser.getText(UI.tocGarment))
+      .then(names => lodash.uniq(names).length);
+
+    return assert.eventually.isAbove(uniqueNames, 5);
+  });
+
+  it('ties each basic in the table of contents to a section', function() {
+    var page = getRecommendations();
+    var getLinks = page.then(() => browser.getAttribute(UI.tocLink, 'href'));
+    var getTargets = page.then(() => browser.getAttribute(UI.basic, 'id'));
+
+    return bluebird.all([getLinks, getTargets]).then(function(queries) {
+      var links = queries[0];
+      var targets = queries[1];
+
+      var fragments = links.map(link => link.split('#')[1]);
+      var valid = lodash.intersection(fragments, targets);
+
+      assert.isAbove(fragments.length, 0);
+      assert.equal(valid.length, fragments.length);
+    });
+  });
+
+  it('has at least one garment for each basic', function() {
+    return getDom().then(function($) {
+      var $basics = $(UI.basic);
+      assert.isAbove($basics.length, 0);
+
+      $basics.each(function() {
+        var $garments = $(this).find(UI.garment);
+        assert.isAbove($garments.length, 1);
+      });
+    });
+  });
+
+  it('has a full list of garments for most basics', function() {
+    return getDom().then(function($) {
+      var $basics = $(UI.basic);
+
+      var fullList = $basics
+        .map(function() { return $(this).find(UI.garment).length; })
+        .get()
+        .filter(count => count === 6);
+
+      var fullRatio = fullList.length / $basics.length;
+      assert.isAbove(fullRatio, 0.5);
+    });
+  });
+
+  it('includes the tracking ID in all Amazon links', function() {
+    return getRecommendations()
+      .then(() => browser.getAttribute(UI.garment, 'href'))
+      .then(function(hrefs) {
+        var tags = hrefs
+          .filter(href => /amazon\.com/.test(href))
+          .map(href => parseQuerystring(parseUrl(href).query).tag);
+
+        assert.equal(lodash.uniq(tags).length, 1);
+        assert.equal(tags[0], config.amazonTrackingId);
+      });
+  });
+
+  it('includes the tracking ID in all Shopstyle links', function() {
+    return getRecommendations()
+      .then(() => browser.getAttribute(UI.garment, 'href'))
+      .then(function(hrefs) {
+        var pids = hrefs
+          .filter(href => /shopstyle\.com/.test(href))
+          .map(href => parseQuerystring(parseUrl(href).query).pid);
+
+        assert.equal(lodash.uniq(pids).length, 1);
+        assert.equal(pids[0], config.shopstyleId);
+      });
+  });
+
+  it('has valid "back to top" links for each basic', function() {
+    return getDom().then(function($) {
+      var links = $(UI.backToTop)
+        .map((i, el) => $(el).attr('href'))
+        .get()
+        .map(href => href.replace(/^#/, ''));
+
+      assert.equal(lodash.uniq(links).length, 1);
+
+      var target = $(`#${links[0]}`);
+      assert.equal(target.length, 1);
+    });
+  });
+
+  it('has valid product images for a random sampling of garments', function() {
+    return getDom()
+      .then(function($) {
+        var garments = lodash.sampleSize($(UI.garment), 3);
+
+        var images = garments
+          .map(el => $(el).attr('style'))
+          .map(style => style.match(/url\(([^\)]+)\)/)[1]);
+
+        images.forEach(function(image) {
+          assert.startsWith(image, config.imagesUrl);
+        });
+
+        return bluebird.map(images, function(image) {
+          return requests.fetch(image, {method: 'HEAD'});
+        });
+      })
+      .then(function(responses) {
+        responses.forEach(function(response) {
+          assert.equal(response.statusCode, 200);
+        });
+      });
+  });
+
+  describe('the email form', function() {
+
+    it('is shown as a non-dismissible footer on load', function() {
+      return getRecommendations()
+        .then(function() {
+          var formAtBottom = negate(browser.isVisibleWithinViewport(UI.emailForm));
+          return assert.eventually.isTrue(formAtBottom);
+        })
+        .then(function() {
+          var dismissVisible = browser.isVisible(UI.dismissEmail);
+          return assert.eventually.isFalse(dismissVisible);
+        });
+    });
+
+    it('is shown as a fixed-position footer that can be dismissed after viewing a few basics', function() {
+      var garmentNames;
+
+      return getRecommendations()
+        .then(() => browser.getText(UI.tocGarment))
+        .then(function(names) {
+          garmentNames = names;
+          var garments = lodash.sampleSize(garmentNames, 2);
+          return bluebird.mapSeries(garments, function(garment) {
+            return browser
+              .click(tocGarment(garment))
+              .then(() => browser.pause(1000));
+          });
+        })
+        .then(function() {
+          return browser.waitUntil(function() {
+            return negate(browser.isVisibleWithinViewport(UI.emailForm));
+          }, 500, 'The email form was prematurely shown');
+        })
+        .then(function() {
+          var garment = lodash.sample(garmentNames);
+          return browser
+            .click(tocGarment(garment))
+            .then(() => browser.pause(1000));
+        })
+        .then(function() {
+          return browser.waitUntil(function() {
+            return browser.isVisibleWithinViewport(UI.emailForm);
+          }, 1000, 'The email form was not shown');
+        })
+        .then(() => browser.click(UI.dismissEmail))
+        .then(function() {
+          return browser.waitUntil(function() {
+            return negate(browser.isVisibleWithinViewport(UI.emailForm));
+          }, 2000, 'The email form was not dismissed');
+        })
+        .then(function() {
+          var isHidden = negate(browser.isVisible(UI.emailForm));
+          return assert.eventually.isFalse(isHidden);
+        });
+    });
+
+    it('shows a dismissible confirmation message when given a valid email', function() {
+      return getRecommendations()
+        .then(() => browser.setValue(UI.emailInput, 'test@example.com'))
+        .then(() => browser.keys([keys.return]))
+        .then(function() {
+          return browser.waitUntil(function() {
+            return browser.isVisibleWithinViewport(UI.emailConfirmation);
+          }, 2000, 'The email confirmation was not shown');
+        });
+    });
+
+    it('prevents the use of an invalid email address', function() {
+      return getRecommendations()
+        .then(() => browser.setValue(UI.emailInput, 'invalid'))
+        .then(() => browser.keys([keys.return]))
+        .then(() => browser.waitForVisible(UI.emailError, 500))
+        .then(function() {
+          var confirmationVisible = browser.isVisible(UI.emailConfirmation);
+          return assert.eventually.isFalse(confirmationVisible);
+        });
+    });
+
+    it('is not shown to a registered user', function() {
+      return getRecommendations()
+        .then(() => browser.setValue(UI.emailInput, 'test@example.com'))
+        .then(() => browser.keys([keys.return]))
+        .then(() => browser.pause(2000))
+        .then(() => browser.refresh())
+        .then(function() {
+          var formVisible = browser.isVisible(UI.emailForm);
+          return assert.eventually.isFalse(formVisible);
+        });
     });
 
   });
