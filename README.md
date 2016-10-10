@@ -1,6 +1,6 @@
 # Minos
 
-This repository contains code for the end-to-end tests of Cover Your Basics.
+This repository contains code for the Cover Your Basics end-to-end tests.
 
 ## Configuration
 
@@ -10,7 +10,7 @@ To configure the testing environment, run the following command:
 $ ./scripts/configure.sh
 ```
 
-This will download Selenium and Chromedriver if they are not installed.  Once
+This will download Selenium and ChromeDriver if they are not installed.  Once
 these files are downloaded, you must set your environment to one of the keys in
 the `config/environments.json` file using the `MINOS_ENVIRONMENT` environment
 variable.  Once you have exported this variable, you can begin to run tests.
