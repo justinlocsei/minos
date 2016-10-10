@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCREENSHOTS_DIR="$ROOT_DIR/screenshots"
 VENDOR_DIR="$ROOT_DIR/vendor"
 
+CHROMEDRIVER_VERSION="2.24"
 SELENIUM_VERSION="2.53"
 
 # Create all required directories
@@ -25,5 +26,23 @@ install_selenium() {
   ln -fs "$selenium_jar" "$VENDOR_DIR/selenium.jar"
 }
 
+# Install ChromeDriver
+install_chromedriver() {
+  local install_dir="$VENDOR_DIR/chromedriver-install"
+  local installer="$install_dir/chromedriver-$CHROMEDRIVER_VERSION-install.zip"
+  local chromedriver="$VENDOR_DIR/chromedriver-$CHROMEDRIVER_VERSION"
+
+  if [ ! -f "$chromedriver" ]; then
+    mkdir "$install_dir"
+    curl http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_mac64.zip --output "$installer"
+    cd "$install_dir" && unzip "$installer"
+    cp chromedriver "$chromedriver"
+    rm -r "$install_dir"
+  fi
+
+  ln -fs "$chromedriver" "$VENDOR_DIR/chromedriver"
+}
+
 create_directories
 install_selenium
+install_chromedriver
