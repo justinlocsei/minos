@@ -1,5 +1,6 @@
 'use strict';
 
+var cheerio = require('cheerio');
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
@@ -50,6 +51,20 @@ function fetch(url, options) {
   }
 
   return requestAsync(settings);
+}
+
+/**
+ * Fetch a page as a traversable DOM object
+ *
+ * @param {string} url The URL to load
+ * @param {object} [options] Additional options to pass to request
+ * @returns {Promise} The results of parsing the URL
+ * @resolve {object} A cheerio instance
+ */
+function fetchDom(url, options) {
+  return fetch(url, options).then(function(response) {
+    return cheerio.load(response.body);
+  });
 }
 
 /**
@@ -132,6 +147,7 @@ function getStatus(response) {
 
 module.exports = {
   fetch: fetch,
+  fetchDom: fetchDom,
   fetchFile: fetchFile,
   fetchStream: fetchStream,
   getStatus: getStatus
