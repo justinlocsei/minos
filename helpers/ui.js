@@ -24,8 +24,16 @@ var home = {
 };
 
 var shared = {
+  copyright: 'footer [class*=copyright]',
+  facebookImageMeta: 'meta[property="og:image"]',
   facebookTitleMeta: 'meta[property="og:title"]',
-  facebookUrlMeta: 'meta[property="og:url"]'
+  facebookUrlMeta: 'meta[property="og:url"]',
+  faviconLink: 'link[rel="shortcut icon"]',
+  footerAboutLink: 'a=About',
+  footerHomeLink: 'a=Home',
+  logo: 'header img[alt="Cover Your Basics"]',
+  touchIconLink: 'link[rel="apple-touch-icon"]',
+  twitterImageMeta: 'meta[name="twitter:image"]'
 };
 
 var survey = {
