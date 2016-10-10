@@ -16,7 +16,11 @@ var about = {
 };
 
 var home = {
-  bodyShapeImage: bodyShapeImage
+  bodyShapeImage: bodyShapeImage,
+  bodyShapeImages: 'img[class*="body-shape"]',
+  formalityImages: 'img[class*="formality"]',
+  pitchGraphic: '.l--pitch [class*="graphic"]',
+  startSurvey: '.l--pitch__button'
 };
 
 var shared = {
@@ -24,8 +28,13 @@ var shared = {
   facebookUrlMeta: 'meta[property="og:url"]'
 };
 
+var survey = {
+  form: '#start-survey'
+};
+
 module.exports = {
   about: about,
   home: home,
-  shared: shared
+  shared: shared,
+  survey: survey
 };
