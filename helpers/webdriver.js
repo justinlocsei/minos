@@ -1,6 +1,16 @@
 'use strict';
 
+var yargs = require('yargs');
+
 var environment = require('minos/config');
+
+var options = yargs
+  .option('gui', {
+    alias: 'g',
+    default: false,
+    describe: 'Run tests in a browser with a GUI'
+  })
+  .argv;
 
 // A mapping of valid Selenium control keys
 var keys = {
@@ -8,21 +18,20 @@ var keys = {
   tab: 'Tab'
 };
 
+// Information on the current webdriver run
+var run = {
+  hasGui: options.gui
+};
+
 /**
  * Create a new config file for webdriver.io
  *
- * @param {object} options Options for creating the config
- * @param {boolean} headless Use a headless browser for the tests
  * @returns {object}
  */
-function buildConfig(options) {
-  var settings = Object.assign({
-    headless: true
-  }, options || {});
+function buildConfig() {
+  var chrome = {browserName: 'chrome'};
+  var phantomjs = {browserName: 'phantomjs'};
 
-  var phantomjs = {
-    browserName: 'phantomjs'
-  };
   if (environment.usesSelfSignedCertificate) {
     phantomjs['phantomjs.cli.args'] = [
       '--ignore-ssl-errors=true',
@@ -30,15 +39,11 @@ function buildConfig(options) {
     ];
   }
 
-  var chrome = {
-    browserName: 'chrome'
-  };
-
   var browsers = [];
-  if (settings.headless) {
-    browsers.push(phantomjs);
-  } else {
+  if (options.gui) {
     browsers.push(chrome);
+  } else {
+    browsers.push(phantomjs);
   }
 
   return {
@@ -69,6 +74,7 @@ function buildConfig(options) {
 }
 
 module.exports = {
-  buildConfig: buildConfig,
-  keys: keys
+  config: buildConfig(),
+  keys: keys,
+  run: run
 };
