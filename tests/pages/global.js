@@ -6,7 +6,6 @@ var sizeOf = require('image-size');
 var assert = require('minos/assert');
 var config = require('minos/config');
 var requests = require('minos/requests');
-var sessions = require('minos/sessions');
 var ui = require('minos/ui');
 var urls = require('minos/urls');
 

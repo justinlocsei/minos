@@ -5,7 +5,6 @@ var parseUrl = require('url').parse;
 
 var assert = require('minos/assert');
 var requests = require('minos/requests');
-var sessions = require('minos/sessions');
 var ui = require('minos/ui');
 var urls = require('minos/urls');
 
