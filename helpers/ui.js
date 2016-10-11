@@ -52,6 +52,7 @@ var recommendations = {
   emailError: '.c--registration__error',
   emailForm: '.l--registration-pitch__registration',
   emailInput: '#email',
+  emailSubmit: '.c--registration__submit',
   garments: '.c--garment__preview',
   priceGroup: '.c--recommendations__price-group',
   tocGarment: name => `.c--basic-teaser__name=${name}`,

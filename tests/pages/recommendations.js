@@ -254,7 +254,7 @@ describe('the recommendations page', function() {
       it('prevents the use of an invalid email address', function() {
         return getRecommendations()
           .then(delay.setValue(UI.emailInput, 'invalid'))
-          .then(delay.keys([keys.return]))
+          .then(delay.click(UI.emailSubmit))
           .then(delay.waitForVisible(UI.emailError, 500))
           .then(function() {
             var confirmationVisible = browser.isVisible(UI.emailConfirmation);
