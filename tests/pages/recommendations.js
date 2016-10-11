@@ -69,7 +69,7 @@ describe('the recommendations page', function() {
       assert.isAbove($basics.length, 0);
 
       $basics.each(function() {
-        var $garments = $(this).find(UI.garment);
+        var $garments = $(this).find(UI.garments);
         assert.isAbove($garments.length, 1);
       });
     });
@@ -80,7 +80,7 @@ describe('the recommendations page', function() {
       var $basics = $(UI.basic);
 
       var fullList = $basics
-        .map(function() { return $(this).find(UI.garment).length; })
+        .map(function() { return $(this).find(UI.garments).length; })
         .get()
         .filter(count => count === 6);
 
@@ -91,7 +91,7 @@ describe('the recommendations page', function() {
 
   it('includes the tracking ID in all Amazon links', function() {
     return getRecommendations()
-      .then(delay.getAttribute(UI.garment, 'href'))
+      .then(delay.getAttribute(UI.garments, 'href'))
       .then(function(hrefs) {
         var tags = hrefs
           .filter(href => /amazon\.com/.test(href))
@@ -104,7 +104,7 @@ describe('the recommendations page', function() {
 
   it('includes the tracking ID in all Shopstyle links', function() {
     return getRecommendations()
-      .then(delay.getAttribute(UI.garment, 'href'))
+      .then(delay.getAttribute(UI.garments, 'href'))
       .then(function(hrefs) {
         var pids = hrefs
           .filter(href => /shopstyle\.com/.test(href))
@@ -117,7 +117,7 @@ describe('the recommendations page', function() {
 
   it('has valid "back to top" links for each basic', function() {
     return getDom().then(function($) {
-      var links = $(UI.backToTop)
+      var links = $(UI.backToTopLinks)
         .map((i, el) => $(el).attr('href'))
         .get()
         .map(href => href.replace(/^#/, ''));
@@ -132,7 +132,7 @@ describe('the recommendations page', function() {
   it('has valid product images for a random sampling of garments', function() {
     return getDom()
       .then(function($) {
-        var garments = lodash.sampleSize($(UI.garment), 3);
+        var garments = lodash.sampleSize($(UI.garments), 3);
 
         var images = garments
           .map(el => $(el).attr('style'))

@@ -44,7 +44,7 @@ var survey = {
 };
 
 var recommendations = {
-  backToTop: '.l--recommendations__basic__return-link',
+  backToTopLinks: '.l--recommendations__basic__return-link',
   basic: '.l--recommendations__basic',
   dismissEmail: '.l--registration-pitch__dismiss',
   dismissEmailConfirmation: '.l--registration-pitch__complete__dismiss',
@@ -52,7 +52,7 @@ var recommendations = {
   emailError: '.c--registration__error',
   emailForm: '.l--registration-pitch__registration',
   emailInput: '#email',
-  garment: '.c--garment__preview',
+  garments: '.c--garment__preview',
   priceGroup: '.c--recommendations__price-group',
   tocGarment: name => `.c--basic-teaser__name=${name}`,
   tocGarments: '.c--basic-teaser__name',
