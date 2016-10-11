@@ -1,22 +1,12 @@
 'use strict';
 
-/**
- * Return a selector for a body-shape image
- *
- * @param {string} name The name of the body shape
- * @returns {string}
- */
-function bodyShapeImage(name) {
-  return `//span[text()="${name}"]/preceding-sibling::img`;
-}
-
 var about = {
   bethanyImage: 'img[alt="Bethany"]',
   startSurvey: '.l--about__cta-button'
 };
 
 var home = {
-  bodyShapeImage: bodyShapeImage,
+  bodyShapeImage: name => `//span[text()="${name}"]/preceding-sibling::img`,
   bodyShapeImages: 'img[class*="body-shape"]',
   formalityImages: 'img[class*="formality"]',
   pitchGraphic: '.l--pitch [class*="graphic"]',
