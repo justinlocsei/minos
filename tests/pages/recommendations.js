@@ -230,6 +230,18 @@ describe('the recommendations page', function() {
           return browser.waitUntil(function() {
             return browser.isVisibleWithinViewport(UI.emailConfirmation);
           }, 2000, 'The email confirmation was not shown');
+        })
+        .then(function() {
+          return browser.waitUntil(function() {
+            return browser.isVisible(UI.dismissEmailConfirmation);
+          }, 2000, 'The dismiss button was not shown');
+        })
+        .then(delay.pause(2000))
+        .then(delay.click(UI.dismissEmailConfirmation))
+        .then(function() {
+          return browser.waitUntil(function() {
+            return flow.negate(browser.isVisible(UI.emailForm));
+          }, 1000, 'The confirmation was not dismissed');
         });
     });
 
