@@ -129,6 +129,19 @@ describe('the recommendations page', function() {
     });
   });
 
+  it('returns to the table of contents when clicking a "back to top" link', function() {
+    var link = `(//*[contains(@class, "${UI.backToTopLinks.substr(1)}")])[last()]`;
+
+    return getRecommendations()
+      .then(delay.scroll(link))
+      .then(delay.click(link))
+      .then(function() {
+        return browser.waitUntil(function() {
+          return browser.isVisibleWithinViewport(UI.tocTitle);
+        }, 1000, 'The table of contents was not returned to');
+      });
+  });
+
   it('has valid product images for a random sampling of garments', function() {
     return getDom()
       .then(function($) {

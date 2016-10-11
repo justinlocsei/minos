@@ -8,6 +8,7 @@ var DELAY_FUNCTIONS = [
   'getValue',
   'keys',
   'pause',
+  'scroll',
   'setValue',
   'submitForm',
   'waitForVisible'
