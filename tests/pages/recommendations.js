@@ -25,12 +25,10 @@ describe('the recommendations page', function() {
   // UI selectors for the recommendations page
   var UI = ui.recommendations;
 
-  // The number of times to retry flaky GUI tests
-  var FLAKY_RETRIES = 2;
-
   // Get the recommendations by submitting a valid survey
   function getRecommendations() {
     return sessions.create(urls.home)
+      .then(browser.deleteCookie)
       .then(actions.completeSurvey)
       .then(delay.submitForm(ui.survey.form));
   }
@@ -249,7 +247,7 @@ describe('the recommendations page', function() {
               return flow.negate(browser.isVisible(UI.emailForm));
             }, 1000, 'The confirmation was not dismissed');
           });
-      }, FLAKY_RETRIES);
+      });
 
       it('prevents the use of an invalid email address', function() {
         return getRecommendations()
@@ -260,7 +258,7 @@ describe('the recommendations page', function() {
             var confirmationVisible = browser.isVisible(UI.emailConfirmation);
             return assert.eventually.isFalse(confirmationVisible);
           });
-      }, FLAKY_RETRIES);
+      });
 
       it('is not shown to a registered user', function() {
         return getRecommendations()
@@ -272,7 +270,7 @@ describe('the recommendations page', function() {
             var formVisible = browser.isVisible(UI.emailForm);
             return assert.eventually.isFalse(formVisible);
           });
-      }, FLAKY_RETRIES);
+      });
 
     }
 
