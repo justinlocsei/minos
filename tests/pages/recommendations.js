@@ -15,6 +15,7 @@ var requests = require('minos/requests');
 var sessions = require('minos/sessions');
 var ui = require('minos/ui');
 var urls = require('minos/urls');
+var webdriver = require('minos/webdriver');
 
 // A proxy to delayed browser methods
 var delay = sessions.delay;
@@ -23,6 +24,9 @@ describe('the recommendations page', function() {
 
   // UI selectors for the recommendations page
   var UI = ui.recommendations;
+
+  // The number of times to retry flaky GUI tests
+  var FLAKY_RETRIES = 2;
 
   // Get the recommendations by submitting a valid survey
   function getRecommendations() {
@@ -166,7 +170,7 @@ describe('the recommendations page', function() {
       });
   });
 
-  describe('the email form', function() {
+  describe.only('the email form', function() {
 
     it('is shown as a non-dismissible footer on load', function() {
       return getRecommendations()
@@ -222,51 +226,55 @@ describe('the recommendations page', function() {
         });
     });
 
-    it('shows a dismissible confirmation message when given a valid email', function() {
-      return getRecommendations()
-        .then(delay.setValue(UI.emailInput, 'test@example.com'))
-        .then(delay.keys([keys.return]))
-        .then(function() {
-          return browser.waitUntil(function() {
-            return browser.isVisibleWithinViewport(UI.emailConfirmation);
-          }, 2000, 'The email confirmation was not shown');
-        })
-        .then(function() {
-          return browser.waitUntil(function() {
-            return browser.isVisible(UI.dismissEmailConfirmation);
-          }, 2000, 'The dismiss button was not shown');
-        })
-        .then(delay.pause(2000))
-        .then(delay.click(UI.dismissEmailConfirmation))
-        .then(function() {
-          return browser.waitUntil(function() {
-            return flow.negate(browser.isVisible(UI.emailForm));
-          }, 1000, 'The confirmation was not dismissed');
-        });
-    });
+    if (webdriver.run.hasGui) {
 
-    it('prevents the use of an invalid email address', function() {
-      return getRecommendations()
-        .then(delay.setValue(UI.emailInput, 'invalid'))
-        .then(delay.keys([keys.return]))
-        .then(delay.waitForVisible(UI.emailError, 500))
-        .then(function() {
-          var confirmationVisible = browser.isVisible(UI.emailConfirmation);
-          return assert.eventually.isFalse(confirmationVisible);
-        });
-    });
+      it('shows a dismissible confirmation message when given a valid email', function() {
+        return getRecommendations()
+          .then(delay.setValue(UI.emailInput, 'test@example.com'))
+          .then(delay.keys([keys.return]))
+          .then(function() {
+            return browser.waitUntil(function() {
+              return browser.isVisibleWithinViewport(UI.emailConfirmation);
+            }, 2000, 'The email confirmation was not shown');
+          })
+          .then(function() {
+            return browser.waitUntil(function() {
+              return browser.isVisible(UI.dismissEmailConfirmation);
+            }, 2000, 'The dismiss button was not shown');
+          })
+          .then(delay.pause(2000))
+          .then(delay.click(UI.dismissEmailConfirmation))
+          .then(function() {
+            return browser.waitUntil(function() {
+              return flow.negate(browser.isVisible(UI.emailForm));
+            }, 1000, 'The confirmation was not dismissed');
+          });
+      }, FLAKY_RETRIES);
 
-    it('is not shown to a registered user', function() {
-      return getRecommendations()
-        .then(delay.setValue(UI.emailInput, 'test@example.com'))
-        .then(delay.keys([keys.return]))
-        .then(delay.pause(2000))
-        .then(browser.refresh)
-        .then(function() {
-          var formVisible = browser.isVisible(UI.emailForm);
-          return assert.eventually.isFalse(formVisible);
-        });
-    });
+      it('prevents the use of an invalid email address', function() {
+        return getRecommendations()
+          .then(delay.setValue(UI.emailInput, 'invalid'))
+          .then(delay.keys([keys.return]))
+          .then(delay.waitForVisible(UI.emailError, 500))
+          .then(function() {
+            var confirmationVisible = browser.isVisible(UI.emailConfirmation);
+            return assert.eventually.isFalse(confirmationVisible);
+          });
+      }, FLAKY_RETRIES);
+
+      it('is not shown to a registered user', function() {
+        return getRecommendations()
+          .then(delay.setValue(UI.emailInput, 'test@example.com'))
+          .then(delay.keys([keys.return]))
+          .then(delay.pause(2000))
+          .then(browser.refresh)
+          .then(function() {
+            var formVisible = browser.isVisible(UI.emailForm);
+            return assert.eventually.isFalse(formVisible);
+          });
+      }, FLAKY_RETRIES);
+
+    }
 
   });
 
