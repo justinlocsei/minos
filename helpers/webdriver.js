@@ -46,6 +46,12 @@ function buildConfig() {
     browsers.push(phantomjs);
   }
 
+  if (environment.usesSelfSignedCertificate) {
+    browsers.forEach(function(browserConfig) {
+      browserConfig.acceptSslCerts = true;
+    });
+  }
+
   return {
     specs: ['./tests/**/*.js'],
     suites: {
