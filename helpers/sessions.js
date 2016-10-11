@@ -1,5 +1,34 @@
 'use strict';
 
+// The names of browser functions for which to expose delayed versions
+var DELAY_FUNCTIONS = [
+  'click',
+  'getAttribute',
+  'getText',
+  'getValue',
+  'keys',
+  'pause',
+  'setValue',
+  'submitForm',
+  'waitForVisible'
+];
+
+// Add wrapped versions of browser functions
+var delay = DELAY_FUNCTIONS.reduce(function(delayed, functionName) {
+  delayed[functionName] = function() {
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+
+    return function delayedBrowser() {
+      return browser[functionName].apply(browser, args);
+    };
+  };
+
+  return delayed;
+}, {});
+
 /**
  * Create a new browsing session for a page
  *
@@ -26,5 +55,6 @@ function createSession(url, options) {
 }
 
 module.exports = {
-  create: createSession
+  create: createSession,
+  delay: delay
 };
