@@ -6,6 +6,7 @@ var DELAY_FUNCTIONS = [
   'getAttribute',
   'getText',
   'getValue',
+  'isVisible',
   'keys',
   'pause',
   'scroll',
