@@ -41,7 +41,7 @@ $ npm run test -- --spec=tests/files/sitemap.js
 To run tests using a browser with a GUI, you could run the following command:
 
 ```bash
-$ npm run test -- --gui
+$ npm run test:gui
 ```
 
 To change the environment under which tests run, you can define a per-run

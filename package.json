@@ -6,6 +6,7 @@
     "lint": "eslint helpers scripts tests || exit 0",
     "postinstall": "linklocal link",
     "test": "./scripts/test.sh",
+    "test:gui": "./scripts/test.sh --gui",
     "selenium": "./scripts/selenium.sh"
   },
   "repository": {
