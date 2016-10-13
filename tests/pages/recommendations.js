@@ -225,101 +225,97 @@ describe('the recommendations page', function() {
         });
     });
 
-    if (webdriver.run.hasGui) {
+    it('sends a confirmation email to a valid email address', function() {
+      var recipient = gmail.buildUniqueAddress();
 
-      it('sends a confirmation email to a valid email address', function() {
-        var recipient = gmail.buildUniqueAddress();
+      return getRecommendations()
+        .then(delay.setValue(UI.emailInput, recipient))
+        .then(delay.keys([keys.return]))
+        .then(delay.pause(1000))
+        .then(delay.isVisible(UI.emailError))
+        .then(function(errorVisible) {
+          assert.isFalse(errorVisible);
 
-        return getRecommendations()
-          .then(delay.setValue(UI.emailInput, recipient))
-          .then(delay.keys([keys.return]))
-          .then(delay.pause(1000))
-          .then(delay.isVisible(UI.emailError))
-          .then(function(errorVisible) {
-            assert.isFalse(errorVisible);
+          return browser.waitUntil(function() {
+            return gmail.fetchMessage(recipient);
+          }, 10000, 'The confirmation email was not received', 2000);
+        })
+        .then(function(message) {
+          var headers = message.payload.headers.reduce(function(previous, header) {
+            previous[header.name] = header.value;
+            return previous;
+          }, {});
 
-            return browser.waitUntil(function() {
-              return gmail.fetchMessage(recipient);
-            }, 10000, 'The confirmation email was not received', 2000);
-          })
-          .then(function(message) {
-            var headers = message.payload.headers.reduce(function(previous, header) {
-              previous[header.name] = header.value;
-              return previous;
-            }, {});
+          assert.equal(headers.Subject, 'You\'re In!');
+          assert.equal(headers.To, recipient);
+          assert.match(headers['Content-Type'], /multipart/);
 
-            assert.equal(headers.Subject, 'You\'re In!');
-            assert.equal(headers.To, recipient);
-            assert.match(headers['Content-Type'], /multipart/);
+          var auth = headers['Authentication-Results'];
+          assert.match(auth, /dkim=pass/, 'Failed DKIM validation');
+          assert.match(auth, /spf=pass/, 'Failed SPF validation');
 
-            var auth = headers['Authentication-Results'];
-            assert.match(auth, /dkim=pass/, 'Failed DKIM validation');
-            assert.match(auth, /spf=pass/, 'Failed SPF validation');
+          assert.match(message.snippet, /Welcome to Cover Your Basics/);
 
-            assert.match(message.snippet, /Welcome to Cover Your Basics/);
+          var text = message.payload.parts.find(p => p.mimeType === 'text/plain');
+          var html = message.payload.parts.find(p => p.mimeType === 'text/html');
 
-            var text = message.payload.parts.find(p => p.mimeType === 'text/plain');
-            var html = message.payload.parts.find(p => p.mimeType === 'text/html');
+          assert.isDefined(text, 'Text email missing');
+          assert.isDefined(html, 'HTML email missing');
 
-            assert.isDefined(text, 'Text email missing');
-            assert.isDefined(html, 'HTML email missing');
+          var textContent = new Buffer(text.body.data, 'base64').toString();
+          var htmlContent = new Buffer(html.body.data, 'base64').toString();
 
-            var textContent = new Buffer(text.body.data, 'base64').toString();
-            var htmlContent = new Buffer(html.body.data, 'base64').toString();
+          assert.match(textContent, /fabulous clothes/);
+          assert.match(htmlContent, /fabulous clothes/);
+          assert.match(htmlContent, /<table/);
+        });
+    });
 
-            assert.match(textContent, /fabulous clothes/);
-            assert.match(htmlContent, /fabulous clothes/);
-            assert.match(htmlContent, /<table/);
-          });
-      });
+    it('shows a dismissible confirmation message when given a valid email', function() {
+      return getRecommendations()
+        .then(delay.setValue(UI.emailInput, config.emailAddress))
+        .then(delay.keys([keys.return]))
+        .then(function() {
+          return browser.waitUntil(function() {
+            return browser.isVisibleWithinViewport(UI.emailConfirmation);
+          }, 2000, 'The email confirmation was not shown');
+        })
+        .then(function() {
+          return browser.waitUntil(function() {
+            return browser.isVisible(UI.dismissEmailConfirmation);
+          }, 2000, 'The dismiss button was not shown');
+        })
+        .then(delay.pause(2000))
+        .then(delay.click(UI.dismissEmailConfirmation))
+        .then(function() {
+          return browser.waitUntil(function() {
+            return flow.negate(browser.isVisible(UI.emailForm));
+          }, 1000, 'The confirmation was not dismissed');
+        });
+    });
 
-      it('shows a dismissible confirmation message when given a valid email', function() {
-        return getRecommendations()
-          .then(delay.setValue(UI.emailInput, config.emailAddress))
-          .then(delay.keys([keys.return]))
-          .then(function() {
-            return browser.waitUntil(function() {
-              return browser.isVisibleWithinViewport(UI.emailConfirmation);
-            }, 2000, 'The email confirmation was not shown');
-          })
-          .then(function() {
-            return browser.waitUntil(function() {
-              return browser.isVisible(UI.dismissEmailConfirmation);
-            }, 2000, 'The dismiss button was not shown');
-          })
-          .then(delay.pause(2000))
-          .then(delay.click(UI.dismissEmailConfirmation))
-          .then(function() {
-            return browser.waitUntil(function() {
-              return flow.negate(browser.isVisible(UI.emailForm));
-            }, 1000, 'The confirmation was not dismissed');
-          });
-      });
+    it('prevents the use of an invalid email address', function() {
+      return getRecommendations()
+        .then(delay.setValue(UI.emailInput, 'invalid'))
+        .then(delay.click(UI.emailSubmit))
+        .then(delay.waitForVisible(UI.emailError, 500))
+        .then(function() {
+          var confirmationVisible = browser.isVisible(UI.emailConfirmation);
+          return assert.eventually.isFalse(confirmationVisible);
+        });
+    });
 
-      it('prevents the use of an invalid email address', function() {
-        return getRecommendations()
-          .then(delay.setValue(UI.emailInput, 'invalid'))
-          .then(delay.click(UI.emailSubmit))
-          .then(delay.waitForVisible(UI.emailError, 500))
-          .then(function() {
-            var confirmationVisible = browser.isVisible(UI.emailConfirmation);
-            return assert.eventually.isFalse(confirmationVisible);
-          });
-      });
-
-      it('is not shown to a registered user', function() {
-        return getRecommendations()
-          .then(delay.setValue(UI.emailInput, config.emailAddress))
-          .then(delay.keys([keys.return]))
-          .then(delay.pause(2000))
-          .then(browser.refresh)
-          .then(function() {
-            var formVisible = browser.isVisible(UI.emailForm);
-            return assert.eventually.isFalse(formVisible);
-          });
-      });
-
-    }
+    it('is not shown to a registered user', function() {
+      return getRecommendations()
+        .then(delay.setValue(UI.emailInput, config.emailAddress))
+        .then(delay.keys([keys.return]))
+        .then(delay.pause(2000))
+        .then(browser.refresh)
+        .then(function() {
+          var formVisible = browser.isVisible(UI.emailForm);
+          return assert.eventually.isFalse(formVisible);
+        });
+    });
 
   });
 
