@@ -148,12 +148,12 @@ describe('the recommendations page', function() {
   it('has valid product images for a random sampling of garments', function() {
     return getDom()
       .then(function($) {
-        var garments = lodash.sampleSize($(UI.garments), 3);
-
-        var images = garments
-          .map(el => $(el).attr('style'))
+        var allImages = $(UI.garments)
+          .map((i, el) => $(el).attr('style'))
+          .get()
           .map(style => style.match(/url\(([^\)]+)\)/)[1]);
 
+        var images = lodash.sampleSize(allImages, 3);
         images.forEach(function(image) {
           assert.startsWith(image, config.imagesUrl);
         });
