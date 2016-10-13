@@ -80,7 +80,7 @@ function buildConfig() {
 
     framework: 'mocha',
     mochaOpts: {
-      timeout: 15000,
+      timeout: 60000,
       ui: 'bdd'
     },
     reporters: ['dot']
