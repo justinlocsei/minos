@@ -66,24 +66,19 @@ function buildConfig() {
       pages: ['./tests/pages/*.js']
     },
 
+    capabilities: browsers,
     screenshotPath: './screenshots/',
     services: ['phantomjs'],
-    capabilities: browsers,
 
     coloredLogs: true,
-    connectionRetryCount: 3,
-    connectionRetryTimeout: 90000,
-    logLevel: 'silent',
-    maxInstances: 10,
+    reporters: ['dot'],
     sync: false,
-    waitforTimeout: 10000,
 
     framework: 'mocha',
     mochaOpts: {
       timeout: 60000,
       ui: 'bdd'
-    },
-    reporters: ['dot']
+    }
   };
 }
 
