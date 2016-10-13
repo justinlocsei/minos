@@ -6,7 +6,7 @@ This repository contains code for the Cover Your Basics end-to-end tests.
 
 To configure the testing environment, run the following command:
 
-```bash
+```sh
 $ ./scripts/configure
 ```
 
@@ -21,32 +21,32 @@ these files are downloaded, you must set the following environment variables:
 Tests are run via a wrapper around webdriver.io, which requires a local Selenium
 server to be available.  To start Selenium, run the following:
 
-```bash
+```sh
 $ npm run selenium
 ```
 
 Once Selenium is running, open a new tab and run the following to run all tests:
 
-```bash
+```sh
 $ npm run test
 ```
 
 The test runner accepts all standard webdriver.io command-line arguments, so you
 can run a single test file using the following command:
 
-```bash
+```sh
 $ npm run test -- --spec=tests/files/sitemap.js
 ```
 
 To run tests using a browser with a GUI, you could run the following command:
 
-```bash
+```sh
 $ npm run test:gui
 ```
 
 To change the environment under which tests run, you can define a per-run
 environment variable as follows:
 
-```bash
+```sh
 $ MINOS_ENVIRONMENT=staging npm run test
 ```
