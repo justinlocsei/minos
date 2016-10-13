@@ -5,8 +5,7 @@ var yargs = require('yargs');
 var environment = require('minos/config');
 
 var options = yargs
-  .option('gui', {
-    alias: 'g',
+  .option('minos-gui', {
     default: false,
     describe: 'Run tests in a browser with a GUI'
   })
@@ -20,7 +19,7 @@ var keys = {
 
 // Information on the current webdriver run
 var run = {
-  hasGui: options.gui
+  hasGui: options['minos-gui']
 };
 
 /**
@@ -42,7 +41,7 @@ function buildConfig() {
   }
 
   var browsers = [];
-  if (options.gui) {
+  if (run.hasGui) {
     browsers.push({
       browserName: 'chrome',
       maxInstances: 2

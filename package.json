@@ -7,7 +7,7 @@
     "lint": "eslint helpers scripts tests || exit 0",
     "postinstall": "linklocal link",
     "test": "./scripts/test || exit 0",
-    "test:gui": "./scripts/test --gui || exit 0",
+    "test:gui": "./scripts/test --minos-gui || exit 0",
     "selenium": "./scripts/run-selenium",
     "selenium:debug": "./scripts/run-selenium --debug"
   },
