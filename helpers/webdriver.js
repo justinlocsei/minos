@@ -74,7 +74,10 @@ function buildConfig() {
     waitforTimeout: 10000,
 
     framework: 'mocha',
-    mochaOpts: {ui: 'bdd'},
+    mochaOpts: {
+      timeout: 15000,
+      ui: 'bdd'
+    },
     reporters: ['spec']
   };
 }
