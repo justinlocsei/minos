@@ -245,7 +245,7 @@ describe('the recommendations page', function() {
               sentAfter: sentAfter,
               subject: 'You’re In!'
             });
-          }, 10000, 'The confirmation email was not received', 2000);
+          }, 45000, 'The confirmation email was not received', 2000);
         })
         .then(function(response) {
           var message = response.message;
