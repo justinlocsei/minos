@@ -4,7 +4,7 @@
   "description": "End-to-end tests for Cover Your Basics",
   "scripts": {
     "authorize-gmail": "./scripts/authorize-gmail --refresh",
-    "lint": "eslint helpers scripts tests || exit 0",
+    "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
     "test": "./scripts/test || exit 0",
     "test:gui": "./scripts/test --minos-gui || exit 0",
