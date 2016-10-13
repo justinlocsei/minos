@@ -3,7 +3,6 @@
 var bluebird = require('bluebird');
 var cheerio = require('cheerio');
 var lodash = require('lodash');
-var moment = require('moment');
 var parseQuerystring = require('querystring').parse;
 var parseUrl = require('url').parse;
 
@@ -11,7 +10,6 @@ var actions = require('minos/actions');
 var assert = require('minos/assert');
 var config = require('minos/config');
 var flow = require('minos/flow');
-var gmail = require('minos/gmail');
 var keys = require('minos/webdriver').keys;
 var requests = require('minos/requests');
 var sessions = require('minos/sessions');
@@ -222,56 +220,6 @@ describe('the recommendations page', function() {
         .then(function() {
           var isHidden = flow.negate(browser.isVisible(UI.emailForm));
           return assert.eventually.isFalse(isHidden);
-        });
-    });
-
-    it('sends a confirmation email to a valid email address', function() {
-      var recipient = config.emailAddress;
-      var sentAfter;
-
-      return getRecommendations()
-        .then(delay.setValue(UI.emailInput, recipient))
-        .then(delay.keys([keys.return]))
-        .then(function() {
-          sentAfter = moment();
-          return browser.pause(1000);
-        })
-        .then(delay.isVisible(UI.emailError))
-        .then(function(errorVisible) {
-          assert.isFalse(errorVisible);
-
-          return browser.waitUntil(function() {
-            return gmail.fetchLastMessage(recipient, {
-              sentAfter: sentAfter,
-              subject: 'You’re In!'
-            });
-          }, 45000, 'The confirmation email was not received', 2000);
-        })
-        .then(function(response) {
-          var message = response.message;
-          var headers = response.headers;
-
-          assert.equal(headers.To, recipient);
-          assert.match(headers['Content-Type'], /multipart/);
-
-          var auth = headers['Authentication-Results'];
-          assert.match(auth, /dkim=pass/, 'Failed DKIM validation');
-          assert.match(auth, /spf=pass/, 'Failed SPF validation');
-
-          assert.match(message.snippet, /Welcome to Cover Your Basics/);
-
-          var text = message.payload.parts.find(p => p.mimeType === 'text/plain');
-          var html = message.payload.parts.find(p => p.mimeType === 'text/html');
-
-          assert.isDefined(text, 'Text email missing');
-          assert.isDefined(html, 'HTML email missing');
-
-          var textContent = new Buffer(text.body.data, 'base64').toString();
-          var htmlContent = new Buffer(html.body.data, 'base64').toString();
-
-          assert.match(textContent, /fabulous clothes/);
-          assert.match(htmlContent, /fabulous clothes/);
-          assert.match(htmlContent, /<table/);
         });
     });
 

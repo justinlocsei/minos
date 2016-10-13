@@ -6,8 +6,9 @@
     "authorize-gmail": "./scripts/authorize-gmail --refresh",
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
-    "test": "./scripts/test || exit 0",
-    "test:gui": "./scripts/test --minos-gui || exit 0",
+    "test": "./scripts/test --suite main || exit 0",
+    "test:email": "./scripts/test --minos-email --suite email || exit 0",
+    "test:gui": "./scripts/test --minos-gui --suite main || exit 0",
     "selenium": "./scripts/run-selenium",
     "selenium:debug": "./scripts/run-selenium --debug"
   },

@@ -5,6 +5,10 @@ var yargs = require('yargs');
 var environment = require('minos/config');
 
 var options = yargs
+  .option('minos-email', {
+    default: false,
+    describe: 'Run email tests'
+  })
   .option('minos-gui', {
     default: false,
     describe: 'Run tests in a browser with a GUI'
@@ -19,8 +23,13 @@ var keys = {
 
 // Information on the current webdriver run
 var run = {
-  hasGui: options['minos-gui']
+  hasGui: options['minos-gui'],
+  testEmail: options['minos-email']
 };
+
+// Set an action-specific timeout
+var timeout = run.testEmail ? 60000 * 5 : 15000;
+run.timeout = timeout;
 
 /**
  * Create a new config file for webdriver.io
@@ -59,10 +68,15 @@ function buildConfig() {
   return {
     specs: ['./tests/**/*.js'],
     suites: {
-      assets: ['./tests/assets/*.js'],
-      files: ['./tests/files/*.js'],
-      network: ['./tests/network/*.js'],
-      pages: ['./tests/pages/*.js']
+      main: [
+        './tests/assets/*.js',
+        './tests/files/*.js',
+        './tests/network/*.js',
+        './tests/pages/*.js'
+      ],
+      email: [
+        './tests/email/*.js'
+      ],
     },
 
     capabilities: browsers,
@@ -75,7 +89,7 @@ function buildConfig() {
 
     framework: 'mocha',
     mochaOpts: {
-      timeout: 60000,
+      timeout: timeout * 1.125,
       ui: 'bdd'
     }
   };
