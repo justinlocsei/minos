@@ -78,7 +78,7 @@ function buildConfig() {
       timeout: 15000,
       ui: 'bdd'
     },
-    reporters: ['spec']
+    reporters: ['dot']
   };
 }
 
