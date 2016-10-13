@@ -8,7 +8,6 @@
     "ecmaVersion": 6
   },
   "rules": {
-    "mocha/no-exclusive-tests": 0,
     "strict": [2, "global"]
   }
 }
