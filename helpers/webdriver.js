@@ -29,8 +29,10 @@ var run = {
  * @returns {object}
  */
 function buildConfig() {
-  var chrome = {browserName: 'chrome'};
-  var phantomjs = {browserName: 'phantomjs'};
+  var phantomjs = {
+    browserName: 'phantomjs',
+    maxInstances: 5
+  };
 
   if (environment.usesSelfSignedCertificate) {
     phantomjs['phantomjs.cli.args'] = [
@@ -41,7 +43,10 @@ function buildConfig() {
 
   var browsers = [];
   if (options.gui) {
-    browsers.push(chrome);
+    browsers.push({
+      browserName: 'chrome',
+      maxInstances: 1
+    });
   } else {
     browsers.push(phantomjs);
   }
