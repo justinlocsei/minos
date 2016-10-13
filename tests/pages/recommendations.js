@@ -228,7 +228,7 @@ describe('the recommendations page', function() {
 
       it('shows a dismissible confirmation message when given a valid email', function() {
         return getRecommendations()
-          .then(delay.setValue(UI.emailInput, 'test@example.com'))
+          .then(delay.setValue(UI.emailInput, config.emailAddress))
           .then(delay.keys([keys.return]))
           .then(function() {
             return browser.waitUntil(function() {
@@ -262,7 +262,7 @@ describe('the recommendations page', function() {
 
       it('is not shown to a registered user', function() {
         return getRecommendations()
-          .then(delay.setValue(UI.emailInput, 'test@example.com'))
+          .then(delay.setValue(UI.emailInput, config.emailAddress))
           .then(delay.keys([keys.return]))
           .then(delay.pause(2000))
           .then(browser.refresh)
