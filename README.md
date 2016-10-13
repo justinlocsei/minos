@@ -11,9 +11,10 @@ $ ./scripts/configure.sh
 ```
 
 This will download Selenium and ChromeDriver if they are not installed.  Once
-these files are downloaded, you must set your environment to one of the keys in
-the `config/environments.json` file using the `MINOS_ENVIRONMENT` environment
-variable.  Once you have exported this variable, you can begin to run tests.
+these files are downloaded, you must set the following environment variables:
+
+- `MINOS_ENVIRONMENT`: One of the keys in the `config/environments.json` file
+- `MINOS_GOOGLE_API_CREDENTIALS`: The absolute path to the API credentials JSON file
 
 ## Running Tests
 
