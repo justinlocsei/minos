@@ -1,5 +1,7 @@
 'use strict';
 
+require('minos/mocha');
+
 var actions = require('minos/actions');
 var assert = require('minos/assert');
 var config = require('minos/config');

@@ -1,5 +1,7 @@
 'use strict';
 
+require('minos/mocha');
+
 var bluebird = require('bluebird');
 var parseUrl = require('url').parse;
 
