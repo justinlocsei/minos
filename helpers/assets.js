@@ -8,7 +8,7 @@
  */
 function getBackgroundImage(style) {
   var match = style.match(/url\(([^\)]+)\)/);
-  return match ? match[1] : null;
+  return match ? match[1].replace(/"/g, '') : null;
 }
 
 /**
