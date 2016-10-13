@@ -2,5 +2,10 @@
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+options=(-Dwebdriver.chrome.driver=chromedriver)
+if [ "$1" == "--debug" ]; then
+  options[1]="-browserSideLog"
+fi
+
 cd "$ROOT_DIR/vendor" || exit 1
-java -jar selenium.jar -Dwebdriver.chrome.driver=chromedriver
+java -jar selenium.jar "${options[@]}"

@@ -8,7 +8,8 @@
     "postinstall": "linklocal link",
     "test": "./scripts/test || exit 0",
     "test:gui": "./scripts/test --gui || exit 0",
-    "selenium": "./scripts/run-selenium"
+    "selenium": "./scripts/run-selenium",
+    "selenium:debug": "./scripts/run-selenium --debug"
   },
   "repository": {
     "type": "git",
