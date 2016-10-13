@@ -2,6 +2,7 @@
   "development": {
     "amazonTrackingId": "coveryourbasics-development-20",
     "cdnUrl": "https://development-www.coveryourbasics.dev",
+    "emailAddress": "bethany@coveryourbasics.com",
     "hasFarFutureAssets": false,
     "imagesUrl": "https://development-data.coveryourbasics.dev",
     "isCrawlable": false,
@@ -13,6 +14,7 @@
   "staging": {
     "amazonTrackingId": "coveryourbasics-staging-20",
     "cdnUrl": "https://assetsstaging-4b66.kxcdn.com",
+    "emailAddress": "bethany@coveryourbasics.com",
     "hasFarFutureAssets": true,
     "imagesUrl": "https://mediastaging-4b66.kxcdn.com",
     "isCrawlable": false,
@@ -24,6 +26,7 @@
   "production": {
     "amazonTrackingId": "coveryourbasics-production-20",
     "cdnUrl": "https://assets-4b66.kxcdn.com",
+    "emailAddress": "bethany@coveryourbasics.com",
     "hasFarFutureAssets": true,
     "imagesUrl": "https://media-4b66.kxcdn.com",
     "isCrawlable": true,
