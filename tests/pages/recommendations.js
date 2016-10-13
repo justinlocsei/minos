@@ -168,7 +168,7 @@ describe('the recommendations page', function() {
       });
   });
 
-  describe.only('the email form', function() {
+  describe('the email form', function() {
 
     it('is shown as a non-dismissible footer on load', function() {
       return getRecommendations()
