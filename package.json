@@ -5,9 +5,9 @@
   "scripts": {
     "lint": "eslint helpers scripts tests || exit 0",
     "postinstall": "linklocal link",
-    "test": "./scripts/test.sh || exit 0",
-    "test:gui": "./scripts/test.sh --gui || exit 0",
-    "selenium": "./scripts/selenium.sh"
+    "test": "./scripts/test || exit 0",
+    "test:gui": "./scripts/test --gui || exit 0",
+    "selenium": "./scripts/run-selenium"
   },
   "repository": {
     "type": "git",

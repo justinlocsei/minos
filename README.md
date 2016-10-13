@@ -7,7 +7,7 @@ This repository contains code for the Cover Your Basics end-to-end tests.
 To configure the testing environment, run the following command:
 
 ```bash
-$ ./scripts/configure.sh
+$ ./scripts/configure
 ```
 
 This will download Selenium and ChromeDriver if they are not installed.  Once
