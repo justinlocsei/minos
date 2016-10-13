@@ -76,7 +76,7 @@ function buildConfig() {
       ],
       email: [
         './tests/email/*.js'
-      ],
+      ]
     },
 
     capabilities: browsers,
