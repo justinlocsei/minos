@@ -16,7 +16,6 @@ var requests = require('minos/requests');
 var sessions = require('minos/sessions');
 var ui = require('minos/ui');
 var urls = require('minos/urls');
-var webdriver = require('minos/webdriver');
 
 // A proxy to delayed browser methods
 var delay = sessions.delay;
