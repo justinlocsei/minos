@@ -64,7 +64,7 @@ function fetchLastMessage(recipient, options) {
           }, {});
 
           var sentAt = moment(headers.Date, 'ddd, DD MMM YYYY HH:mm:ss Z');
-          if (sentAt.isBefore(options.sentAfter)) {
+          if (sentAt.isBefore(options.sentAfter, 'seconds')) {
             return resolve(null);
           }
 
