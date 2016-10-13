@@ -3,6 +3,7 @@
 var bluebird = require('bluebird');
 var cheerio = require('cheerio');
 var lodash = require('lodash');
+var moment = require('moment');
 var parseQuerystring = require('querystring').parse;
 var parseUrl = require('url').parse;
 
@@ -225,27 +226,31 @@ describe('the recommendations page', function() {
     });
 
     it('sends a confirmation email to a valid email address', function() {
-      var recipient = gmail.buildUniqueAddress();
+      var recipient = config.emailAddress;
+      var sentAfter;
 
       return getRecommendations()
         .then(delay.setValue(UI.emailInput, recipient))
         .then(delay.keys([keys.return]))
-        .then(delay.pause(1000))
+        .then(function() {
+          sentAfter = moment();
+          return browser.pause(1000);
+        })
         .then(delay.isVisible(UI.emailError))
         .then(function(errorVisible) {
           assert.isFalse(errorVisible);
 
           return browser.waitUntil(function() {
-            return gmail.fetchMessage(recipient);
+            return gmail.fetchLastMessage(recipient, {
+              sentAfter: sentAfter,
+              subject: 'You’re In!'
+            });
           }, 10000, 'The confirmation email was not received', 2000);
         })
-        .then(function(message) {
-          var headers = message.payload.headers.reduce(function(previous, header) {
-            previous[header.name] = header.value;
-            return previous;
-          }, {});
+        .then(function(response) {
+          var message = response.message;
+          var headers = response.headers;
 
-          assert.equal(headers.Subject, 'You\'re In!');
           assert.equal(headers.To, recipient);
           assert.match(headers['Content-Type'], /multipart/);
 
