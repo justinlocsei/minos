@@ -16,6 +16,15 @@ these files are downloaded, you must set the following environment variables:
 - `MINOS_ENVIRONMENT`: One of the keys in the `config/environments.json` file
 - `MINOS_GOOGLE_API_CREDENTIALS`: The absolute path to the API credentials JSON file
 
+The credentials for the Gmail API can be downloaded from the Google APIs
+dashboard.  Once you have downloaded this file and set its path via the
+environment variable, you must grant the Gmail API access to your account by
+running the following:
+
+```sh
+$ npm run authorize-gmail
+```
+
 ## Running Tests
 
 Tests are run via a wrapper around webdriver.io, which requires a local Selenium
