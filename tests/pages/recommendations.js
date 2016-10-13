@@ -204,14 +204,12 @@ describe('the recommendations page', function() {
         })
         .then(function() {
           var garment = lodash.sample(garmentNames);
-          return browser
-            .click(UI.tocGarment(garment))
-            .then(delay.pause(1000));
+          return browser.click(UI.tocGarment(garment));
         })
         .then(function() {
           return browser.waitUntil(function() {
             return browser.isVisibleWithinViewport(UI.emailForm);
-          }, 1000, 'The email form was not shown');
+          }, 2000, 'The email form was not shown');
         })
         .then(delay.click(UI.dismissEmail))
         .then(function() {
