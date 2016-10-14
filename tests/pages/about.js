@@ -72,7 +72,7 @@ describe('the about page', function() {
         var relative = positions[1];
 
         assert.isAbove(absolute.y, 0);
-        assert.equal(relative.y, 0);
+        assert.isBelow(relative.y, 5);
       });
   });
 
