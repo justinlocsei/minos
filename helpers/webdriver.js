@@ -39,7 +39,7 @@ run.timeout = timeout;
 function buildConfig() {
   var phantomjs = {
     browserName: 'phantomjs',
-    maxInstances: 10
+    maxInstances: 5
   };
 
   if (environment.usesSelfSignedCertificate) {
