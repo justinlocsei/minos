@@ -20,6 +20,9 @@ describe('the survey', function() {
   // The wait duration for form events
   var FORM_WAIT = 250;
 
+  // The wait duration for scrolling to the first error
+  var ERROR_SCROLL_WAIT = 1000;
+
   // UI selectors for the survey
   var UI = ui.survey;
 
@@ -100,6 +103,7 @@ describe('the survey', function() {
       return sessions.create(urls.home)
         .submitForm(UI.form)
         .then(delay.waitForVisible(UI.errors.formalities, FORM_WAIT))
+        .then(delay.pause(ERROR_SCROLL_WAIT))
         .then(delay.click(UI.formalityChoice('Casual', 'Occasionally')))
         .then(function() {
           return browser.waitUntil(function() {
@@ -112,6 +116,7 @@ describe('the survey', function() {
       return sessions.create(urls.home)
         .submitForm(UI.form)
         .then(delay.waitForVisible(UI.errors.formalities, FORM_WAIT))
+        .then(delay.pause(ERROR_SCROLL_WAIT))
         .then(delay.click(UI.formalityChoice('Casual', 'Occasionally')))
         .then(delay.waitForVisible(UI.errors.formalities, FORM_WAIT, true))
         .then(delay.click(UI.formalityChoice('Casual', 'Never')))
@@ -122,6 +127,7 @@ describe('the survey', function() {
       return sessions.create(urls.home)
         .submitForm(UI.form)
         .then(delay.waitForVisible(UI.errors.formalities, FORM_WAIT))
+        .then(delay.pause(ERROR_SCROLL_WAIT))
         .then(delay.click(UI.formalityChoice('Casual', 'Occasionally')))
         .then(delay.waitForVisible(UI.errors.formalities, FORM_WAIT, true))
         .then(delay.click(UI.formalityChoice('Dressy Casual', 'Never')))
@@ -142,6 +148,7 @@ describe('the survey', function() {
       return sessions.create(urls.home)
         .submitForm(UI.form)
         .then(delay.waitForVisible(UI.errors.styles, FORM_WAIT))
+        .then(delay.pause(ERROR_SCROLL_WAIT))
         .then(delay.click(UI.styleChoice('Creative, Fun')))
         .then(function() {
           return browser.waitUntil(function() {
@@ -153,6 +160,7 @@ describe('the survey', function() {
     it('disables the styles when three have been selected', function() {
       return sessions.create(urls.home)
         .submitForm(UI.form)
+        .then(delay.pause(ERROR_SCROLL_WAIT))
         .then(delay.click(UI.styleChoice('Creative, Fun')))
         .then(delay.click(UI.styleChoice('Sleek, Efficient')))
         .then(delay.click(UI.styleChoice('Classy, Elegant')))
@@ -201,6 +209,7 @@ describe('the survey', function() {
       return sessions.create(urls.home)
         .submitForm(UI.form)
         .then(delay.waitForVisible(UI.errors.bodyShapes, FORM_WAIT))
+        .then(delay.pause(ERROR_SCROLL_WAIT))
         .then(delay.click(UI.bodyShapeChoice('Pear')))
         .then(function() {
           return browser.waitUntil(function() {
@@ -223,6 +232,7 @@ describe('the survey', function() {
       return sessions.create(urls.home)
         .submitForm(UI.form)
         .then(delay.waitForVisible(UI.errors.sizes, FORM_WAIT))
+        .then(delay.pause(ERROR_SCROLL_WAIT))
         .then(delay.click(UI.sizeChoice('Petite M')))
         .then(function() {
           return browser.waitUntil(function() {
