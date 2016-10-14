@@ -7,6 +7,7 @@ VENDOR_DIR="$ROOT_DIR/vendor"
 
 CHROMEDRIVER_VERSION="2.24"
 SELENIUM_VERSION="2.53"
+SELENIUM_JAR_VERSION="2.53.1"
 
 # Create all required directories
 create_directories() {
@@ -17,10 +18,10 @@ create_directories() {
 
 # Install the standalone Selenium server
 install_selenium() {
-  local selenium_jar="$VENDOR_DIR/selenium-$SELENIUM_VERSION.jar"
+  local selenium_jar="$VENDOR_DIR/selenium-$SELENIUM_JAR_VERSION.jar"
 
   if [ ! -f "$selenium_jar" ]; then
-    curl http://selenium-release.storage.googleapis.com/$SELENIUM_VERSION/selenium-server-standalone-$SELENIUM_VERSION.0.jar --output "$selenium_jar"
+    curl http://selenium-release.storage.googleapis.com/$SELENIUM_VERSION/selenium-server-standalone-$SELENIUM_JAR_VERSION.jar --output "$selenium_jar"
   fi
 
   ln -fs "$selenium_jar" "$VENDOR_DIR/selenium.jar"
