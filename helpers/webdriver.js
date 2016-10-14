@@ -53,7 +53,11 @@ function buildConfig() {
   if (run.hasGui) {
     browsers.push({
       browserName: 'chrome',
-      maxInstances: 2
+      maxInstances: 1
+    });
+    browsers.push({
+      browserName: 'firefox',
+      maxInstances: 1
     });
   } else {
     browsers.push(phantomjs);
