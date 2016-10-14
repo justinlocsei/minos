@@ -184,14 +184,13 @@ describe('the recommendations page', function() {
     });
 
     it('is shown as a fixed-position footer that can be dismissed after viewing a few basics', function() {
-      var garmentNames;
+      var garments;
 
       return getRecommendations()
         .then(delay.getText(UI.tocGarments))
         .then(function(names) {
-          garmentNames = names;
-          var garments = lodash.sampleSize(garmentNames, 2);
-          return bluebird.mapSeries(garments, function(garment) {
+          garments = lodash.sampleSize(names, 3);
+          return bluebird.mapSeries(garments.slice(0, 2), function(garment) {
             return browser
               .click(UI.tocGarment(garment))
               .then(delay.pause(1000));
@@ -203,8 +202,7 @@ describe('the recommendations page', function() {
           }, 500, 'The email form was prematurely shown');
         })
         .then(function() {
-          var garment = lodash.sample(garmentNames);
-          return browser.click(UI.tocGarment(garment));
+          return browser.click(UI.tocGarment(lodash.last(garments)));
         })
         .then(function() {
           return browser.waitUntil(function() {
