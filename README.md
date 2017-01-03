@@ -27,35 +27,22 @@ $ npm run authorize-gmail
 
 ## Running Tests
 
-Tests are run via a wrapper around webdriver.io, which requires a local Selenium
-server to be available.  To start Selenium, run the following:
-
 ```sh
+# Start selenium in the foreground
 $ npm run selenium
-```
 
-Once Selenium is running, open a new tab and run the following to run all tests:
-
-```sh
+# Run the main tests in another session
 $ npm run test
-```
 
-The test runner accepts all standard webdriver.io command-line arguments, so you
-can run a single test file using the following command:
-
-```sh
+# Run a specific test file
 $ scripts/test --spec=tests/files/sitemap.js
-```
 
-To run tests using a browser with a GUI, you could run the following command:
-
-```sh
+# Run the main tests in a browser with a GUI
 $ npm run test:gui
-```
 
-To change the environment under which tests run, you can define a per-run
-environment variable as follows:
+# Test the email workflow
+$ npm run test:email
 
-```sh
+# Use a custom environment for a single run of tests
 $ MINOS_ENVIRONMENT=staging npm run test
 ```
