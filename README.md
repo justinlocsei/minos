@@ -44,7 +44,7 @@ The test runner accepts all standard webdriver.io command-line arguments, so you
 can run a single test file using the following command:
 
 ```sh
-$ npm run test -- --spec=tests/files/sitemap.js
+$ scripts/test --spec=tests/files/sitemap.js
 ```
 
 To run tests using a browser with a GUI, you could run the following command:
