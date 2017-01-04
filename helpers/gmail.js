@@ -36,6 +36,7 @@ function fetchLastMessage(recipient, options) {
     });
 
     var query = {
+      after: options.sentAfter.clone().subtract(1, 'day').format('YYYY/M/D'),
       is: 'unread',
       label: 'testing',
       subject: options.subject,
