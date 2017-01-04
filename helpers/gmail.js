@@ -62,30 +62,58 @@ function fetchLastMessage(recipient, options) {
           return resolve(null);
         }
 
-        var getQuery = {
-          id: messages[0].id,
-          userId: config.emailAddress
-        };
+        var message = null;
+        var messageIds = listResponse.messages.map(m => m.id);
 
-        return gmail.users.messages.get(getQuery, function(getError, getResponse) {
-          if (getError) { return reject(getError); }
+        Promise.each(messageIds, function(messageId) {
+          if (message) { return; }
 
-          var message = getResponse;
-          var headers = message.payload.headers.reduce(function(previous, header) {
-            previous[header.name] = header.value;
-            return previous;
-          }, {});
-
-          var sentAt = moment(headers.Date, 'ddd, DD MMM YYYY HH:mm:ss Z');
-          if (sentAt.isBefore(options.sentAfter, 'seconds')) {
-            return resolve(null);
-          }
-
-          return resolve({
-            headers: headers,
-            message: message
+          var request = getMessageDetailsIfSentAfterTime(gmail, messageId, options.sentAfter);
+          return request.then(function(details) {
+            message = message || details;
           });
+        }).then(function() {
+          resolve(message);
+        }).catch(function(error) {
+          reject(error);
         });
+      });
+    });
+  });
+}
+
+/**
+ * Get details on a message if it was sent after a given time
+ *
+ * @param {google.auth.OAuth2} gmail An authorized connection to Gmail
+ * @param {string} id THe ID of the message
+ * @param {moment} time The time after which the message must be sent
+ * @returns {Promise}
+ * @resolve {object} Details on the message
+ */
+function getMessageDetailsIfSentAfterTime(gmail, id, time) {
+  var query = {
+    id: id,
+    userId: config.emailAddress
+  };
+
+  return new Promise(function(resolve, reject) {
+    gmail.users.messages.get(query, function(error, message) {
+      if (error) { return reject(error); }
+
+      var headers = message.payload.headers.reduce(function(previous, header) {
+        previous[header.name] = header.value;
+        return previous;
+      }, {});
+
+      var sentAt = moment(headers.Date, 'ddd, DD MMM YYYY HH:mm:ss Z');
+      if (sentAt.isBefore(time, 'seconds')) {
+        return resolve(null);
+      }
+
+      return resolve({
+        headers: headers,
+        message: message
       });
     });
   });
