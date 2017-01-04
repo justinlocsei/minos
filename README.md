@@ -28,14 +28,14 @@ $ npm run authorize-gmail
 ## Running Tests
 
 ```sh
-# Start selenium in the foreground
+# Start Selenium in the foreground
 $ npm run selenium
 
 # Run the main tests in another session
 $ npm run test
 
 # Run a specific test file
-$ scripts/test --spec=tests/files/sitemap.js
+$ ./scripts/test --spec=tests/files/sitemap.js
 
 # Run the main tests in a browser with a GUI
 $ npm run test:gui
@@ -45,4 +45,7 @@ $ npm run test:email
 
 # Use a custom environment for a single run of tests
 $ MINOS_ENVIRONMENT=staging npm run test
+
+# Lint code
+$ npm run lint
 ```
