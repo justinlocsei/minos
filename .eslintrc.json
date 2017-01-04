@@ -8,6 +8,7 @@
     "ecmaVersion": 6
   },
   "rules": {
+    "consistent-return": [0],
     "strict": [2, "global"]
   }
 }
