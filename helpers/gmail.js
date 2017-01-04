@@ -35,8 +35,20 @@ function fetchLastMessage(recipient, options) {
       version: 'v1'
     });
 
+    var query = {
+      is: 'unread',
+      label: 'testing',
+      subject: options.subject,
+      to: recipient
+    };
+
+    var queryPairs = Object.keys(query).reduce(function(previous, key) {
+      previous.push(`${key}:${query[key]}`);
+      return previous;
+    }, []);
+
     var listQuery = {
-      q: `subject:${options.subject} to:${recipient} label:testing is:unread`,
+      q: queryPairs.join(' '),
       userId: config.emailAddress
     };
 
