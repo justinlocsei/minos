@@ -72,8 +72,8 @@ describe('the welcome email', function() {
         var textContent = new Buffer(text.body.data, 'base64').toString();
         var htmlContent = new Buffer(html.body.data, 'base64').toString();
 
-        assert.match(textContent, /fabulous clothes/);
-        assert.match(htmlContent, /fabulous clothes/);
+        assert.match(textContent, /work naked/);
+        assert.match(htmlContent, /work naked/);
         assert.match(htmlContent, /<table/);
       });
   });
