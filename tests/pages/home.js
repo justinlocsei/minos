@@ -23,7 +23,7 @@ describe('the home page', function() {
     var title = browser.url(urls.home)
       .getAttribute(ui.shared.facebookTitleMeta, 'content');
 
-    return assert.eventually.equal(title, 'Fill Out Our Survey');
+    return assert.eventually.equal(title, 'Cover Your Basics');
   });
 
   it('has a valid Facebook share URL', function() {
