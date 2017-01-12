@@ -255,17 +255,21 @@ describe('the recommendations page', function() {
         });
     });
 
-    it('is not shown to a registered user', function() {
-      return getRecommendations()
-        .then(delay.setValue(UI.emailInput, config.emailAddress))
-        .then(delay.keys([keys.return]))
-        .then(delay.pause(2000))
-        .then(browser.refresh)
-        .then(function() {
-          var formVisible = browser.isVisible(UI.emailForm);
-          return assert.eventually.isFalse(formVisible);
-        });
-    });
+    if (config.supportsSessions) {
+
+      it('is not shown to a registered user', function() {
+        return getRecommendations()
+          .then(delay.setValue(UI.emailInput, config.emailAddress))
+          .then(delay.keys([keys.return]))
+          .then(delay.pause(2000))
+          .then(browser.refresh)
+          .then(function() {
+            var formVisible = browser.isVisible(UI.emailForm);
+            return assert.eventually.isFalse(formVisible);
+          });
+      });
+
+    }
 
   });
 

@@ -8,6 +8,7 @@
     "isCrawlable": false,
     "shopstyleId": "uid3600-33034440-48",
     "siteUrl": "https://development-www.coveryourbasics.dev",
+    "supportsSessions": false,
     "usesSelfSignedCertificate": true,
     "usesVarnish": false
   },
@@ -20,6 +21,7 @@
     "isCrawlable": false,
     "shopstyleId": "uid3600-33034440-48",
     "siteUrl": "https://staging-www.coveryourbasics.com",
+    "supportsSessions": true,
     "usesSelfSignedCertificate": false,
     "usesVarnish": true
   },
@@ -32,6 +34,7 @@
     "isCrawlable": true,
     "shopstyleId": "uid3600-33034440-48",
     "siteUrl": "https://www.coveryourbasics.com",
+    "supportsSessions": true,
     "usesSelfSignedCertificate": false,
     "usesVarnish": true
   }
