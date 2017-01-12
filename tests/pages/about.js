@@ -14,14 +14,14 @@ describe('the about page', function() {
 
   it('has the expected title', function() {
     var title = browser.url(urls.about).getTitle();
-    return assert.eventually.equal(title, 'About - Cover Your Basics');
+    return assert.eventually.equal(title, 'About Us - Cover Your Basics');
   });
 
   it('has the expected Facebook title', function() {
     var title = browser.url(urls.about)
       .getAttribute(ui.shared.facebookTitleMeta, 'content');
 
-    return assert.eventually.equal(title, 'About');
+    return assert.eventually.equal(title, 'About Us');
   });
 
   it('has a valid Facebook share URL', function() {
