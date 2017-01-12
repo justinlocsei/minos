@@ -45,6 +45,30 @@ describe('page foundation', function() {
     return assert.eventually.equal(destination, urls.home);
   });
 
+  it('has a link to take the survey in the header', function() {
+    return browser.url(urls.home)
+      .click(ui.shared.headerSurveyLink)
+      .then(browser.getUrl)
+      .then(function(url) {
+        var parsed = URL.parse(url);
+        var hash = parsed.hash;
+
+        delete parsed.hash;
+        var destination = URL.format(parsed);
+
+        assert.equal(destination, urls.home);
+        assert.equal(hash, ui.survey.form);
+      });
+  });
+
+  it('has a link to the about page in the header', function() {
+    var destination = browser.url(urls.home)
+      .click(ui.shared.headerAboutLink)
+      .then(browser.getUrl);
+
+    return assert.eventually.equal(destination, urls.about);
+  });
+
   it('has a link to the home page in the footer', function() {
     var destination = browser.url(urls.home)
       .click(ui.shared.footerHomeLink)
