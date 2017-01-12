@@ -4,6 +4,7 @@ require('minos/mocha');
 
 var bluebird = require('bluebird');
 var sizeOf = require('image-size');
+var URL = require('url');
 
 var assert = require('minos/assert');
 var config = require('minos/config');
@@ -50,6 +51,22 @@ describe('page foundation', function() {
       .then(browser.getUrl);
 
     return assert.eventually.equal(destination, urls.home);
+  });
+
+  it('has a link to take the survey in the footer', function() {
+    return browser.url(urls.home)
+      .click(ui.shared.footerSurveyLink)
+      .then(browser.getUrl)
+      .then(function(url) {
+        var parsed = URL.parse(url);
+        var hash = parsed.hash;
+
+        delete parsed.hash;
+        var destination = URL.format(parsed);
+
+        assert.equal(destination, urls.home);
+        assert.equal(hash, ui.survey.form);
+      });
   });
 
   it('has a link to the about page in the footer', function() {

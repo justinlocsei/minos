@@ -20,6 +20,7 @@ var shared = {
   faviconLink: 'link[rel="shortcut icon"]',
   footerAboutLink: 'a=About Us',
   footerHomeLink: 'a=Home',
+  footerSurveyLink: 'a=Get Started',
   logo: 'header img[alt="Cover Your Basics"]',
   touchIconLink: 'link[rel="apple-touch-icon"]',
   twitterImageMeta: 'meta[name="twitter:image"]'
