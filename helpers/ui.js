@@ -20,6 +20,7 @@ var shared = {
   faviconLink: 'link[rel="shortcut icon"]',
   footerAboutLink: '//footer//a[text()="About Us"]',
   footerHomeLink: '//footer//a[text()="Home"]',
+  footerLogo: 'footer img[alt="Cover Your Basics"]',
   footerSurveyLink: '//footer//a[text()="Get Started"]',
   headerAboutLink: '//header//a[text()="About Us"]',
   headerSurveyLink: '//header//a[text()="Get Started"]',

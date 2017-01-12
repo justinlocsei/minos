@@ -93,6 +93,14 @@ describe('page foundation', function() {
       });
   });
 
+  it('has a logo in the footer that links to the home page', function() {
+    var destination = browser.url(urls.home)
+      .click(ui.shared.footerLogo)
+      .then(browser.getUrl);
+
+    return assert.eventually.equal(destination, urls.home);
+  });
+
   it('has a link to the about page in the footer', function() {
     var destination = browser.url(urls.home)
       .click(ui.shared.footerAboutLink)
