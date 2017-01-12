@@ -14,7 +14,6 @@ var home = {
 };
 
 var shared = {
-  copyright: 'footer [class*=copyright]',
   facebookImageMeta: 'meta[property="og:image"]',
   facebookTitleMeta: 'meta[property="og:title"]',
   facebookUrlMeta: 'meta[property="og:url"]',

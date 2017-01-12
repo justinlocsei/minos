@@ -60,15 +60,6 @@ describe('page foundation', function() {
     return assert.eventually.equal(destination, urls.about);
   });
 
-  it('uses the current year for the copyright', function() {
-    var copyright = browser
-      .url(urls.home)
-      .getText(ui.shared.copyright);
-
-    var year = new Date().getFullYear();
-    return assert.eventually.equal(copyright, `©${year} Cover Your Basics`);
-  });
-
   it('uses a favicon served over the CDN', function() {
     return browser.url(urls.home)
       .getAttribute(ui.shared.faviconLink, 'href')
