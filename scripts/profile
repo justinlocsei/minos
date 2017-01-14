@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var run = require('child_process').spawnSync;
+
+var config = require('minos/config');
+
+var root = path.normalize(path.join(__dirname, '..'));
+var profilesDir = path.join(root, 'profiles');
+var profile = path.join(profilesDir, 'profile.html');
+
+run('mkdir', ['-p', profilesDir]);
+
+run(
+  'lighthouse',
+  [
+    '--config-path', path.join(root, '.lightouserc.json'),
+    '--output', 'html',
+    '--output-path', profile,
+    config.siteUrl
+  ],
+  {stdio: 'inherit'}
+);
+
+run('open', [profile]);
