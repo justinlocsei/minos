@@ -6,6 +6,7 @@
     "authorize-gmail": "./scripts/authorize-gmail --refresh",
     "lint": "eslint helpers tests || exit 0",
     "postinstall": "linklocal link",
+    "profile": "./scripts/profile",
     "test": "./scripts/test --suite main",
     "test:email": "./scripts/test --minos-email --suite email",
     "test:gui": "./scripts/test --minos-gui --suite main",

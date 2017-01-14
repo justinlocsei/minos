@@ -48,4 +48,7 @@ $ MINOS_ENVIRONMENT=staging npm run test
 
 # Lint code
 $ npm run lint
+
+# Profile the performance of an environment
+$ MINOS_ENVIRONMENT=production npm run profile
 ```
