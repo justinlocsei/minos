@@ -49,5 +49,8 @@
     "webdriverio": "^4.2.16",
     "xml2js": "^0.4.17",
     "yargs": "^6.0.0"
+  },
+  "engines": {
+    "node": ">= 5.0"
   }
 }
