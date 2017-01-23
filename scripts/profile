@@ -14,7 +14,7 @@ run('mkdir', ['-p', profilesDir]);
 run(
   'lighthouse',
   [
-    '--config-path', path.join(root, '.lightouserc.json'),
+    '--config-path', path.join(root, '.lighthouserc.json'),
     '--output', 'html',
     '--output-path', profile,
     config.siteUrl
