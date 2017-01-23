@@ -100,8 +100,9 @@ describe('the recommendations page', function() {
           .filter(href => /amazon\.com/.test(href))
           .map(href => parseQuerystring(parseUrl(href).query).tag);
 
-        assert.equal(lodash.uniq(tags).length, 1);
-        assert.equal(tags[0], config.amazonTrackingId);
+        var uniqueTags = lodash.uniq(tags);
+        assert.equal(uniqueTags.length, 1, `Multiple tracking IDs: ${uniqueTags.join(', ')}`);
+        assert.equal(uniquTags[0], config.amazonTrackingId);
       });
   });
 
@@ -113,8 +114,9 @@ describe('the recommendations page', function() {
           .filter(href => /shopstyle\.com/.test(href))
           .map(href => parseQuerystring(parseUrl(href).query).pid);
 
-        assert.equal(lodash.uniq(pids).length, 1);
-        assert.equal(pids[0], config.shopstyleId);
+        var uniquePids = lodash.uniq(pids);
+        assert.equal(uniquePids.length, 1, `Multiple PIDs: ${uniquePids.join(', ')}`);
+        assert.equal(uniquePids[0], config.shopstyleId);
       });
   });
 
