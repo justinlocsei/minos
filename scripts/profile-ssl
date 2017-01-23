@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+var spawn = require('child_process').spawn;
+
+var config = require('minos/config');
+
+function displayResults(jsonText) {
+  var results = JSON.parse(jsonText)[0].endpoints[0];
+
+  var data = [
+    ['SSL Grade', results.grade],
+    ['Issuer Name', results.details.cert.issuerLabel],
+    ['OCSP Stapling', results.details.ocspStapling ? 'Enabled' : 'Disabled'],
+    ['HSTS Policy', results.details.hstsPolicy.status == 'present' ? 'Enabled' : 'Disabled'],
+  ];
+
+  var longestTitle = data.reduce(function(previous, pair) {
+    return Math.max(pair[0].length, previous);
+  }, 0);
+
+  console.log('\nRESULTS')
+  data.forEach(function(pair) {
+    var padding = longestTitle - pair[0].length;
+    console.log(pair[0] + ' '.repeat(padding) + ' | ' + pair[1]);
+  });
+
+  console.log('\nUNSUPPORTED CLIENTS')
+  results.details.sims.results.forEach(function(client) {
+    if (client.errorCode !== 0) {
+      var platform = client.client.platform ? ' (' + client.client.platform + ')' : '';
+      console.log(client.client.name + ' ' + client.client.version + platform);
+    }
+  });
+}
+
+console.log('Starting scan of ' + config.siteUrl + '...');
+
+var jsonData = new Buffer('');
+var scan = spawn('ssllabs-scan', ['--quiet', config.siteUrl.replace(/^https:\/\//, '')]);
+
+scan.stdout.on('data', function(data) { jsonData += data; });
+scan.stderr.on('data', function(data) { console.log('Error: ' + data.toString()); });
+
+scan.on('close', function() {
+  displayResults(jsonData.toString());
+});

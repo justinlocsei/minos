@@ -51,4 +51,7 @@ $ npm run lint
 
 # Profile the performance of an environment
 $ MINOS_ENVIRONMENT=production npm run profile
+
+# Run an SSL Labs scan on an environment
+$ MINOS_ENVIRONMENT=staging npm run profile:ssl
 ```
