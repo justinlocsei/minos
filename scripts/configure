@@ -44,6 +44,14 @@ install_chromedriver() {
   ln -fs "$chromedriver" "$VENDOR_DIR/chromedriver"
 }
 
+# Install the CLI for SSL Labs via Homebrew
+install_ssllabs_scan() {
+  if ! which -s ssllabs-scan; then
+    brew install ssllabs-scan
+  fi
+}
+
 create_directories
 install_selenium
 install_chromedriver
+install_ssllabs_scan
