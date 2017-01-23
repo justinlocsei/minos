@@ -102,7 +102,7 @@ describe('the recommendations page', function() {
 
         var uniqueTags = lodash.uniq(tags);
         assert.equal(uniqueTags.length, 1, `Multiple tracking IDs: ${uniqueTags.join(', ')}`);
-        assert.equal(uniquTags[0], config.amazonTrackingId);
+        assert.equal(uniqueTags[0], config.amazonTrackingId);
       });
   });
 
