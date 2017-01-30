@@ -1,73 +1,61 @@
 'use strict';
 
+var _ = require('lodash');
 var bluebird = require('bluebird');
-var lodash = require('lodash');
+var parseUrl = require('url').parse;
 
 var assert = require('minos/assert');
+var config = require('minos/config');
 var requests = require('minos/requests');
 var urls = require('minos/urls');
 
 describe('preloading', function() {
 
-  it('is enabled via HTTP Link headers', function() {
+  it('is enabled via an HTTP Link header', function() {
     return bluebird.map([urls.about, urls.home], function(url) {
-      return requests.fetch(url).then(requests.getHeader('link')).then(function(links) {
-        var defs = links.split(', ');
-        assert.isAbove(defs.length, 0);
+      return requests.fetch(url).then(requests.getHeader('link')).then(function(link) {
+        var match = link.match(/^<([^>]+)>; rel=(.+)$/);
+        var preconnectUrl = match[1];
+        var rel = match[2];
 
-        defs.forEach(function(def) {
-          assert.match(def, /^<.+\.(css|js)>/, 'non-asset URL specified');
-          assert.match(def, /; rel=preload; /, 'preload directive missing');
-          assert.match(def, /; as=\w+$/, 'request destination missing');
-        });
+        assert.equal(preconnectUrl, config.cdnUrl);
+        assert.equal(rel, 'preconnect');
       });
     });
   });
 
-  it('uses media-appropriate request destinations', function() {
+  it('uses the host for all assets on the page', function() {
     return bluebird.map([urls.about, urls.home], function(url) {
-      return requests.fetch(url).then(requests.getHeader('link')).then(function(links) {
-        var byMedia = links.split(', ').reduce(function(previous, def) {
-          var extension = def.match(/^<.+\.([^>]+)>/)[1];
-          previous[extension] = previous[extension] || [];
-          previous[extension].push(def.match(/; as=(.+)$/)[1]);
-          return previous;
-        }, {});
-
-        assert.isAbove(byMedia.js.length, 0);
-        assert.isAbove(byMedia.css.length, 0);
-
-        assert.deepEqual(lodash.uniq(byMedia.js), ['script']);
-        assert.deepEqual(lodash.uniq(byMedia.css), ['style']);
-      });
-    });
-  });
-
-  it('references assets specified on each page', function() {
-    return bluebird.map([urls.about, urls.home], function(url) {
-      var links = requests.fetch(url).then(requests.getHeader('link'));
+      var link = requests.fetch(url).then(requests.getHeader('link'));
       var markup = requests.fetchDom(url);
 
-      return bluebird.all([links, markup]);
+      return bluebird.all([link, markup]);
     }).then(function(results) {
       results.forEach(function(result) {
-        var links = result[0];
+        var link = result[0];
+        var preconnectUrl = link.match(/^<([^>]+)>/)[1];
+
         var $ = result[1];
+        var queries = [
+          {tag: 'link', attr: 'href'},
+          {tag: 'script', attr: 'src'}
+        ];
 
-        var byMedia = links.split(', ').reduce(function(previous, def) {
-          var extension = def.match(/^<.+\.([^>]+)>/)[1];
-          previous[extension] = previous[extension] || [];
-          previous[extension].push(def.match(/<(.+)>/)[1]);
+        var assetHosts = queries.reduce(function(previous, query) {
+          $(query.tag).each(function() {
+            var url = $(this).attr(query.attr);
+            var parsed;
+
+            if (url) {
+              parsed = parseUrl(url);
+              previous.push(`${parsed.protocol}//${parsed.host}`);
+            }
+          });
+
           return previous;
-        }, {});
+        }, []);
 
-        byMedia.js.forEach(function(js) {
-          assert.equal($(`script[src="${js}"]`).length, 1);
-        });
-
-        byMedia.css.forEach(function(css) {
-          assert.equal($(`link[href="${css}"]`).length, 1);
-        });
+        assert.include(_.uniq(assetHosts), preconnectUrl);
       });
     });
   });
